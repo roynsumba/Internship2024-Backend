@@ -1,6 +1,5 @@
 ﻿using AppraisalTracker.Modules.AppraisalActivity.Models;
 using AppraisalTracker.Modules.AppraisalActivity.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
@@ -16,7 +15,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             _configMenuItemService = configMenuItemService;
         }
 
-    
+
         [HttpGet("GetConfigMenuItems")]
         public async Task<ActionResult<ConfigMenuItem>> GetConfigMenuItems()
         {
@@ -27,7 +26,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         [HttpPost("CreateConfigMenuItem")]
         public async Task<ConfigMenuItem> PostConfigMenuItem(ConfigMenuItem configMenuItem)
         {
-            return await _configMenuItemService.PostConfigMenuItem(configMenuItem);
+            return await _configMenuItemService.AddConfigMenuItem(configMenuItem);
 
         }
 

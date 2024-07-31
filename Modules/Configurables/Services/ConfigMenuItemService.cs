@@ -8,23 +8,19 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
     public interface IConfigMenuItemService
     {
         public Task<List<ConfigMenuItem>> FetchConfigMenuItems();
-        public Task<ConfigMenuItem> PostConfigMenuItem(ConfigMenuItem configmenuitem);
+        public Task<ConfigMenuItem> AddConfigMenuItem(ConfigMenuItem configmenuitem);
     }
-    public class ConfigMenuItemService : IConfigMenuItemService
+    public class ConfigMenuItemService(AppDbContext context) : IConfigMenuItemService
     {
 
-        public readonly AppDbContext _context;
-        public ConfigMenuItemService(AppDbContext context)
-        {
-            _context = context;
-        }
+        public readonly AppDbContext _context = context;
 
         public async Task<List<ConfigMenuItem>> FetchConfigMenuItems()
         {
             return await _context.ConfigMenuItems.ToListAsync();
         }
 
-        public async Task<ConfigMenuItem> PostConfigMenuItem(ConfigMenuItem configmenuitem)
+        public async Task<ConfigMenuItem> AddConfigMenuItem(ConfigMenuItem configmenuitem)
         {
             if (_context.ConfigMenuItems.Any(e => e.ItemId == configmenuitem.ItemId))
             {

@@ -43,11 +43,9 @@ namespace AppraisalTracker.Migrations
 
             modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.Implementation", b =>
                 {
-                    b.Property<int>("ImplementationId")
+                    b.Property<Guid>("ImplementationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ImplementationId"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
                         .HasColumnType("text");
@@ -63,8 +61,8 @@ namespace AppraisalTracker.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("MeasurableActivityId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("MeasurableActivityId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Stakeholder")
                         .HasColumnType("text");
@@ -78,33 +76,36 @@ namespace AppraisalTracker.Migrations
 
             modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.MeasurableActivity", b =>
                 {
-                    b.Property<int>("MeasurableActivityId")
+                    b.Property<Guid>("MeasurableActivityId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MeasurableActivityId"));
+                    b.Property<Guid?>("ActivityId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("Activity")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("InitiativeId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("Initiative")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("PeriodId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("Period")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("PerspectiveId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("Perspective")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SsMartaObjectives")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("SsMartaObjectivesId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("MeasurableActivityId");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("InitiativeId");
+
+                    b.HasIndex("PeriodId");
+
+                    b.HasIndex("PerspectiveId");
+
+                    b.HasIndex("SsMartaObjectivesId");
 
                     b.ToTable("MeasurableActivities");
                 });
@@ -118,6 +119,39 @@ namespace AppraisalTracker.Migrations
                         .IsRequired();
 
                     b.Navigation("MeasurableActivity");
+                });
+
+            modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.MeasurableActivity", b =>
+                {
+                    b.HasOne("AppraisalTracker.Modules.AppraisalActivity.Models.ConfigMenuItem", "ConfigActivityId")
+                        .WithMany()
+                        .HasForeignKey("ActivityId");
+
+                    b.HasOne("AppraisalTracker.Modules.AppraisalActivity.Models.ConfigMenuItem", "ConfigInitiativeId")
+                        .WithMany()
+                        .HasForeignKey("InitiativeId");
+
+                    b.HasOne("AppraisalTracker.Modules.AppraisalActivity.Models.ConfigMenuItem", "ConfigPeriodId")
+                        .WithMany()
+                        .HasForeignKey("PeriodId");
+
+                    b.HasOne("AppraisalTracker.Modules.AppraisalActivity.Models.ConfigMenuItem", "ConfigPerspectiveId")
+                        .WithMany()
+                        .HasForeignKey("PerspectiveId");
+
+                    b.HasOne("AppraisalTracker.Modules.AppraisalActivity.Models.ConfigMenuItem", "ConfigSsMartaObjectivesId")
+                        .WithMany()
+                        .HasForeignKey("SsMartaObjectivesId");
+
+                    b.Navigation("ConfigActivityId");
+
+                    b.Navigation("ConfigInitiativeId");
+
+                    b.Navigation("ConfigPeriodId");
+
+                    b.Navigation("ConfigPerspectiveId");
+
+                    b.Navigation("ConfigSsMartaObjectivesId");
                 });
 
             modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.MeasurableActivity", b =>

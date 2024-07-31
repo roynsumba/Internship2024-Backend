@@ -6,9 +6,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
 {
     public class Implementation
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public int ImplementationId { get; set; }
+        public Guid ImplementationId { get; set; }
 
         [Required]
         public string Description { get; set; } = string.Empty;
@@ -22,9 +21,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         [Required]
         public DateTime Date { get; set; }
 
-
-        [Required]
-        public int MeasurableActivityId { get; set; }
+        public Guid MeasurableActivityId { get; set; }
 
         [ForeignKey(nameof(MeasurableActivityId))]
 
