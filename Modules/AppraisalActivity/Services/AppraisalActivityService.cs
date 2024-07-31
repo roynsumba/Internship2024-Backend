@@ -14,7 +14,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         public Task<MeasurableActivity> FetchMeasurableActivity(int id);
         public Task<Implementation> FetchImplementation(int id);
 
-        public Task<MeasurableActivity> UpdateMeasurableActivity(MeasurableActivity measurableActivity);
+        public Task<MeasurableActivity> UpdateMeasurableActivity(int id, MeasurableActivity measurableActivity);
+        public Task<bool> DeleteMeasurableActivity(int id);
+
         public Task<Implementation> UpdateImplementation(Implementation implementation);
 
         public Task<MeasurableActivity> PostMeasurableActivity(MeasurableActivity measurableActivity);
@@ -59,17 +61,17 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             return implementation ?? throw new KeyNotFoundException("Measurable activity not found.");
         }
 
-        public async Task<MeasurableActivity> UpdateMeasurableActivity(MeasurableActivity measurableActivity)
+        public async Task<MeasurableActivity> UpdateMeasurableActivity(int id, MeasurableActivity measurableActivity)
         {
 
-          if(_context.MeasurableActivities.Any(e => e.MeasurableActivityId == measurableActivity.MeasurableActivityId)) 
-            { 
-              
+            if (_context.MeasurableActivities.Any(e => e.MeasurableActivityId == measurableActivity.MeasurableActivityId))
+            {
+
                 _context.Update(measurableActivity);
 
                 await _context.SaveChangesAsync();
                 return measurableActivity;
-          
+
             }
             throw new ClientFriendlyException("no measurable activity found");
 
@@ -81,15 +83,28 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
             if (_context.Implementations.Any(e => e.ImplementationId == implementation.ImplementationId))
             {
-                    _context.Update(implementation);
+                _context.Update(implementation);
 
-                    await _context.SaveChangesAsync();
-                    return implementation;
-               
+                await _context.SaveChangesAsync();
+                return implementation;
+
             }
             throw new ClientFriendlyException("no implementation found");
 
 
+        }
+
+        public async Task<bool> DeleteMeasurableActivity(int id)
+        {
+            var measurableActivity = await _context.MeasurableActivities.FindAsync(id);
+            if (measurableActivity == null)
+            {
+                return false;
+            }
+
+            _context.MeasurableActivities.Remove(measurableActivity);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<MeasurableActivity> PostMeasurableActivity(MeasurableActivity measurableActivity)
@@ -129,9 +144,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             else
             {
                 return false;
-            } 
+            }
 
-            
+
 
         }
 

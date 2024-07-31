@@ -40,11 +40,16 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // PUT: api/MeasurableActivities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("UpdateMeasurableActivities")]
-        public async Task<MeasurableActivity> UpdateMeasurableActivity([FromBody] MeasurableActivity measurableActivity)
+         [HttpPut("UpdateMeasurableActivities/{id}")]
+        public async Task<ActionResult<MeasurableActivity>> UpdateMeasurableActivity(int id, [FromBody] MeasurableActivity measurableActivity)
         {
-            return await _appraisalActivityService.UpdateMeasurableActivity(measurableActivity);
+            if (id != measurableActivity.MeasurableActivityId)
+            {
+                return BadRequest("ID mismatch");
+            }
 
+            var updatedActivity = await _appraisalActivityService.UpdateMeasurableActivity(id, measurableActivity);
+            return Ok(updatedActivity);
         }
 
         // POST: api/MeasurableActivities
