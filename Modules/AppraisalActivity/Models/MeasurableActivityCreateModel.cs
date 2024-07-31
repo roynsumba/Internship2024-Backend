@@ -7,8 +7,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         public Guid? PerspectiveId { get; set; }
         public Guid? SsMartaObjectivesId { get; set; }
         public Guid? InitiativeId { get; set; }
-
-        public List<ImplementationCreateModel> Implementation { get; set; } = [];
+        
+        public List<Implementation> Implementation { get; set; } = [];
 
     }
 }

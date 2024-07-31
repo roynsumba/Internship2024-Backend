@@ -13,8 +13,6 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         public string? Stakeholder { get; set; }
         public string Evidence { get; set; } = string.Empty;
         public DateTime Date { get; set; }
-        public Guid MeasurableActivityId { get; set; }
-        public MeasurableActivity? MeasurableActivity { get; set; }
 
     }
 }

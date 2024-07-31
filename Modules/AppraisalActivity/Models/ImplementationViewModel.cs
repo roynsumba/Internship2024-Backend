@@ -9,7 +9,6 @@
         public string Evidence { get; set; } = string.Empty;
         public DateTime Date { get; set; }
         public Guid MeasurableActivityId { get; set; }
-        public MeasurableActivity? MeasurableActivity { get; set; }
         public DateTime? DateOfReceipt { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastUpdated { get; set; }

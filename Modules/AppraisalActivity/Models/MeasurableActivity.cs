@@ -21,7 +21,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         public ConfigMenuItem? ConfigSsMartaObjectivesId { get; set; }
         public ConfigMenuItem? ConfigInitiativeId { get; set; }
 
-        public List<ImplementationCreateModel> Implementation { get; set; } = [];
+        public List<Implementation> Implementation { get; set; } = [];
 
     }
 }

@@ -129,8 +129,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 Comment = implementation.Comment,
                 Stakeholder = implementation.Stakeholder,
                 Evidence = implementation.Evidence,
-                Date = implementation.Date,
-                MeasurableActivityId = implementation.MeasurableActivityId,
+                Date = implementation.Date
             };
 
             await _context.Implementations.AddAsync(newImplementation);
