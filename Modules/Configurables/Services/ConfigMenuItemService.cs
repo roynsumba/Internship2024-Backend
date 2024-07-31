@@ -9,7 +9,27 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
     {
         public Task<List<ConfigMenuItem>> FetchConfigMenuItems();
         public Task<ConfigMenuItem> AddConfigMenuItem(ConfigMenuItem configmenuitem);
+        public Task<bool> DeleteConfigMenuItem(Guid id);
+
+
+
+        // Perspective-specific methods
+        Task<List<ConfigMenuItem>> FetchPerspectives();
+        Task<ConfigMenuItem> FetchPerspective(Guid id);
+        Task<ConfigMenuItem> AddPerspective(ConfigMenuItem perspective);
+        Task<ConfigMenuItem> UpdatePerspective(Guid id, ConfigMenuItem perspective);
+        Task<bool> DeletePerspective(Guid id);
+
+        // Initiative-specific methods
+        Task<List<ConfigMenuItem>> FetchInitiatives();
+        Task<ConfigMenuItem> FetchInitiative(Guid id);
+        Task<ConfigMenuItem> AddInitiative(ConfigMenuItem initiative);
+        Task<ConfigMenuItem> UpdateInitiative(Guid id, ConfigMenuItem initiative);
+        Task<bool> DeleteInitiative(Guid id);
+
     }
+
+
     public class ConfigMenuItemService(AppDbContext context) : IConfigMenuItemService
     {
 
@@ -33,5 +53,93 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             return configmenuitem;
         }
 
+         public async Task<bool> DeleteConfigMenuItem(Guid id)
+        {
+            var configMenuItem = await _context.ConfigMenuItems.FindAsync(id);
+            if (configMenuItem != null)
+            {
+                _context.ConfigMenuItems.Remove(configMenuItem);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
+        // Perspective-specific methods
+
+        public async Task<List<ConfigMenuItem>> FetchPerspectives()
+        {
+            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Perspective").ToListAsync();
+        }
+
+        public async Task<ConfigMenuItem> FetchPerspective(Guid id)
+        {
+            return await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Perspective") ?? throw new KeyNotFoundException("Perspective not found.");
+        }
+
+        public async Task<ConfigMenuItem> AddPerspective(ConfigMenuItem perspective)
+        {
+            perspective.FieldName = "Perspective";
+            return await AddConfigMenuItem(perspective);
+        }
+
+        public async Task<ConfigMenuItem> UpdatePerspective(Guid id, ConfigMenuItem perspective)
+        {
+            var existingItem = await FetchPerspective(id);
+            existingItem.FieldDescription = perspective.FieldDescription;
+            _context.ConfigMenuItems.Update(existingItem);
+            await _context.SaveChangesAsync();
+            return existingItem;
+        }
+
+
+        public async Task<bool> DeletePerspective(Guid id)
+        {
+            return await DeleteConfigMenuItem(id);
+        }
+
+
+        // Initiative-specific methods
+
+        public async Task<List<ConfigMenuItem>> FetchInitiatives()
+        {
+            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Initiative").ToListAsync();
+        }
+
+        public async Task<ConfigMenuItem> FetchInitiative(Guid id)
+        {
+            return await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Initiative") ?? throw new KeyNotFoundException("Initiative not found.");
+        }
+
+        public async Task<ConfigMenuItem> AddInitiative(ConfigMenuItem initiative)
+        {
+            initiative.FieldName = "Initiative";
+            return await AddConfigMenuItem(initiative);
+        }
+
+        public async Task<ConfigMenuItem> UpdateInitiative(Guid id, ConfigMenuItem initiative)
+        {
+            var existingItem = await FetchPerspective(id);
+            existingItem.FieldDescription = initiative.FieldDescription;
+            _context.ConfigMenuItems.Update(existingItem);
+            await _context.SaveChangesAsync();
+            return existingItem;
+        }
+
+
+        public async Task<bool> DeleteInitiative(Guid id)
+        {
+            return await DeleteConfigMenuItem(id);
+        }
+
+
+
+
+
     }
+
+
+
 }
+

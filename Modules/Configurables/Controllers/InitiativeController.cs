@@ -1,11 +1,103 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using AppraisalTracker.Modules.AppraisalActivity.Models;
+using AppraisalTracker.Modules.AppraisalActivity.Services;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("initiative")]
     [ApiController]
     public class InitiativeController : ControllerBase
     {
+        private readonly IConfigMenuItemService _configMenuItemService;
+
+        public InitiativeController(IConfigMenuItemService configMenuItemService)
+        {
+            _configMenuItemService = configMenuItemService;
+        }
+
+        // GET: all initiatives
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetInitiatives()
+        {
+            var initiatives = await _configMenuItemService.FetchInitiatives();
+            return Ok(initiatives);
+        }
+
+        // GET: single initiative
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ConfigMenuItem>> GetInitiative(Guid id)
+        {
+            try
+            {
+                var initiative = await _configMenuItemService.FetchInitiative(id);
+                return Ok(initiative);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        // POST: add initiative
+        [HttpPost]
+        public async Task<ActionResult<ConfigMenuItem>> AddInitiative([FromBody] ConfigMenuItem initiative)
+        {
+            try
+            {
+                var newInitiative = await _configMenuItemService.AddConfigMenuItem(initiative);
+                return CreatedAtAction(nameof(GetInitiative), new { id = newInitiative.ItemId }, newInitiative);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        // update initiative
+
+        [HttpPost("{id}")]
+        public async Task<ActionResult<ConfigMenuItem>> UpdateInitiative(Guid id, [FromBody] ConfigMenuItem initiative)
+        {
+            if (id != initiative.ItemId)
+            {
+                return BadRequest("ID mismatch.");
+            }
+
+            try
+            {
+                var updatedInitiative = await _configMenuItemService.UpdatePerspective(id, initiative);
+                return Ok(updatedInitiative);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        // DELETE: initiative
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteInitiative(Guid id)
+        {
+            try
+            {
+                var deleted = await _configMenuItemService.DeleteInitiative(id);
+                if (deleted)
+                {
+                    return NoContent();
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
