@@ -1,9 +1,8 @@
 ﻿using AppraisalTracker.Exceptions;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AppraisalTracker.Data;
 using AppraisalTracker.Modules.AppraisalActivity.Models;
+using AutoMapper;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Services
 {
@@ -19,7 +18,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public Task<Implementation> UpdateImplementation(Implementation implementation);
 
-        public Task<MeasurableActivity> PostMeasurableActivity(MeasurableActivity measurableActivity);
+        public Task<MeasurableActivityViewModel> AddMeasurableActivity(MeasurableActivityCreateModel measurableActivity);
         public Task<Implementation> PostImplementation(Implementation implementation);
 
         public Task<bool> DeleteImplementation(int id);
@@ -27,14 +26,11 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
 
     }
-    public class AppraisalActivityService : IAppraisalActivityService
+    public class AppraisalActivityService(AppDbContext context, IMapper mapper) : IAppraisalActivityService
     {
 
-        public readonly AppDbContext _context;
-        public AppraisalActivityService(AppDbContext context)
-        {
-            _context = context;
-        }
+        public readonly AppDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<List<MeasurableActivity>> FetchMeasurableActivities()
         {
@@ -107,15 +103,22 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             return true;
         }
 
-        public async Task<MeasurableActivity> PostMeasurableActivity(MeasurableActivity measurableActivity)
+        public async Task<MeasurableActivityViewModel> AddMeasurableActivity(MeasurableActivityCreateModel measurableActivity)
         {
-            if (_context.MeasurableActivities.Any(e => e.MeasurableActivityId == measurableActivity.MeasurableActivityId))
+            var newMeasurableActivity = new MeasurableActivity
             {
-                throw new ClientFriendlyException("Measurable activity already exisitng");
-            }
-            _context.MeasurableActivities.Add(measurableActivity);
+                ActivityId = measurableActivity.ActivityId,
+                InitiativeId = measurableActivity.InitiativeId,
+                PeriodId = measurableActivity.PeriodId,
+                PerspectiveId = measurableActivity.PerspectiveId,
+                Implementation = measurableActivity.Implementation,
+                SsMartaObjectivesId = measurableActivity.SsMartaObjectivesId
+            };
+
+            await _context.MeasurableActivities.AddAsync(newMeasurableActivity);
             await _context.SaveChangesAsync();
-            return measurableActivity;
+            var addedActivity = _mapper.Map<MeasurableActivity, MeasurableActivityViewModel>(newMeasurableActivity);
+            return addedActivity;
         }
 
         public async Task<Implementation> PostImplementation(Implementation implementation)

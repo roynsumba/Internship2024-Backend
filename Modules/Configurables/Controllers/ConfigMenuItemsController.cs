@@ -26,7 +26,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         [HttpPost("CreateConfigMenuItem")]
         public async Task<ConfigMenuItem> PostConfigMenuItem(ConfigMenuItem configMenuItem)
         {
-            return await _configMenuItemService.PostConfigMenuItem(configMenuItem);
+            return await _configMenuItemService.AddConfigMenuItem(configMenuItem);
 
         }
 
