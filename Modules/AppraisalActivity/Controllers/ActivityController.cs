@@ -87,11 +87,11 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             var success = await _appraisalActivityService.DeleteMeasurableActivity(id);
             if (success)
             {
-                return NoContent(); // 204 No Content
+                return NoContent();
             }
             else
             {
-                return NotFound(); // 404 Not Found
+                return NotFound();
             }
         }
 
