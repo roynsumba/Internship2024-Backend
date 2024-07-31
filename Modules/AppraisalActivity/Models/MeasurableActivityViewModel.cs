@@ -2,7 +2,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
 {
     public class MeasurableActivityViewModel
     {
-        public int MeasurableActivityId { get; set; }
+        public Guid MeasurableActivityId { get; set; }
         public Guid? PeriodId { get; set; }
         public Guid? ActivityId { get; set; }
         public Guid? PerspectiveId { get; set; }
