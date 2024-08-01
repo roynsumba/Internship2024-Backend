@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AppraisalTracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240731105834_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240731174051_initialmigration")]
+    partial class initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
