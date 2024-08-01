@@ -16,7 +16,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             _configMenuItemService = configMenuItemService;
         }
 
-        // Retrieves all initiatives
+        // Retrieves all initiatives.
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetInitiatives()
         {
@@ -56,14 +56,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
 
         // Updates an initiative
-        [HttpPost("{id}")]
-        public async Task<ActionResult<ConfigMenuItem>> UpdateInitiative(Guid id, [FromBody] ConfigMenuItem initiative)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ConfigMenuItem>> UpdateInitiative(Guid id, ConfigMenuItem initiative)
         {
-            if (id != initiative.ItemId)
-            {
-                return BadRequest("ID mismatch.");
-            }
-
             try
             {
                 var updatedInitiative = await _configMenuItemService.UpdateInitiative(id, initiative);
@@ -82,7 +77,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // Deletes an initiative
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInitiative(Guid id)
+        public async Task<ActionResult> DeleteInitiative(Guid id)
         {
             try
             {

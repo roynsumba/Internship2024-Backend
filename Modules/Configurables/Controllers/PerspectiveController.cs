@@ -56,14 +56,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
 
         // Updates a perspective
-        [HttpPost("{id}")]
-        public async Task<ActionResult<ConfigMenuItem>> UpdatePerspective(Guid id, [FromBody] ConfigMenuItem perspective)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ConfigMenuItem>> UpdatePerspective(Guid id, ConfigMenuItem perspective)
         {
-            if (id != perspective.ItemId)
-            {
-                return BadRequest("ID mismatch.");
-            }
-
             try
             {
                 var updatedPerspective = await _configMenuItemService.UpdatePerspective( id,perspective);
@@ -82,7 +77,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // Deletes a perspective
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePerspective(Guid id)
+        public async Task<ActionResult> DeletePerspective(Guid id)
         {
             try
             {
