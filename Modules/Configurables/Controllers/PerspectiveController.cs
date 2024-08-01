@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 {
-    [Route("perspective")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PerspectiveController : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // Retrieves all perspectives
-        [HttpGet]
+        [HttpGet("get-all-perspectives")]
         public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetPerspectives()
         {
             var perspectives = await _configMenuItemService.FetchPerspectives();
@@ -25,7 +25,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // Retrieves a single perspective
-        [HttpGet("{id}")]
+        [HttpGet("get-a-single-perspective/{id}")]
         public async Task<ActionResult<ConfigMenuItem>> GetPerspective(Guid id)
         {
             try
@@ -40,7 +40,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // Adds a perspective
-        [HttpPost]
+        [HttpPost("add-a-perspective")]
         public async Task<ActionResult<ConfigMenuItem>> AddPerspective([FromBody] ConfigMenuItem perspective)
         {
             try
@@ -56,7 +56,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
 
         // Updates a perspective
-        [HttpPut("{id}")]
+        [HttpPut("update-a-perspective/{id}")]
         public async Task<ActionResult<ConfigMenuItem>> UpdatePerspective(Guid id, ConfigMenuItem perspective)
         {
             try
@@ -76,7 +76,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
 
         // Deletes a perspective
-        [HttpDelete("{id}")]
+        [HttpDelete("delete-a-perspective/{id}")]
         public async Task<ActionResult> DeletePerspective(Guid id)
         {
             try
