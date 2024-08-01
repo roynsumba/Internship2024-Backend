@@ -44,7 +44,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         {
             if (_context.ConfigMenuItems.Any(e => e.ItemId == configmenuitem.ItemId))
             {
-                throw new ClientFriendlyException("Implementation already exisitng");
+                throw new ClientFriendlyException("Implementation already exisiting");
             }
 
             _context.ConfigMenuItems.Add(configmenuitem);
@@ -75,7 +75,14 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<ConfigMenuItem> FetchPerspective(Guid id)
         {
-            return await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Perspective") ?? throw new KeyNotFoundException("Perspective not found.");
+            var perspective = await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Perspective");
+
+            if (perspective == null)
+            {
+                throw new KeyNotFoundException("Perspective not found.");
+            }
+
+            return perspective;
         }
 
         public async Task<ConfigMenuItem> AddPerspective(ConfigMenuItem perspective)
@@ -109,7 +116,14 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<ConfigMenuItem> FetchInitiative(Guid id)
         {
-            return await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Initiative") ?? throw new KeyNotFoundException("Initiative not found.");
+            var initiative = await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Initiative");
+
+            if (initiative == null)
+            {
+                throw new KeyNotFoundException("Initiative not found.");
+            }
+
+            return initiative;
         }
 
         public async Task<ConfigMenuItem> AddInitiative(ConfigMenuItem initiative)
@@ -120,7 +134,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<ConfigMenuItem> UpdateInitiative(Guid id, ConfigMenuItem initiative)
         {
-            var existingItem = await FetchPerspective(id);
+            var existingItem = await FetchInitiative(id);
             existingItem.FieldDescription = initiative.FieldDescription;
             _context.ConfigMenuItems.Update(existingItem);
             await _context.SaveChangesAsync();

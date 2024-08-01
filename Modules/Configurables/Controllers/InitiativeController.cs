@@ -16,7 +16,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             _configMenuItemService = configMenuItemService;
         }
 
-        // GET: all initiatives
+        // Retrieves all initiatives
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetInitiatives()
         {
@@ -24,7 +24,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             return Ok(initiatives);
         }
 
-        // GET: single initiative
+        // Retrieves a single initiative
         [HttpGet("{id}")]
         public async Task<ActionResult<ConfigMenuItem>> GetInitiative(Guid id)
         {
@@ -39,7 +39,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             }
         }
 
-        // POST: add initiative
+        // Adds an initiative
         [HttpPost]
         public async Task<ActionResult<ConfigMenuItem>> AddInitiative([FromBody] ConfigMenuItem initiative)
         {
@@ -55,8 +55,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
 
-        // update initiative
-
+        // Updates an initiative
         [HttpPost("{id}")]
         public async Task<ActionResult<ConfigMenuItem>> UpdateInitiative(Guid id, [FromBody] ConfigMenuItem initiative)
         {
@@ -67,7 +66,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
             try
             {
-                var updatedInitiative = await _configMenuItemService.UpdatePerspective(id, initiative);
+                var updatedInitiative = await _configMenuItemService.UpdateInitiative(id, initiative);
                 return Ok(updatedInitiative);
             }
             catch (KeyNotFoundException)
@@ -81,7 +80,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
 
-        // DELETE: initiative
+        // Deletes an initiative
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInitiative(Guid id)
         {

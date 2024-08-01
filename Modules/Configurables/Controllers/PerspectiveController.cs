@@ -16,7 +16,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             _configMenuItemService = configMenuItemService;
         }
 
-        // GET: api/Perspectives
+        // Retrieves all perspectives
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetPerspectives()
         {
@@ -24,7 +24,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             return Ok(perspectives);
         }
 
-        // GET: api/Perspectives/{id}
+        // Retrieves a single perspective
         [HttpGet("{id}")]
         public async Task<ActionResult<ConfigMenuItem>> GetPerspective(Guid id)
         {
@@ -39,7 +39,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             }
         }
 
-        // POST: api/Perspectives
+        // Adds a perspective
         [HttpPost]
         public async Task<ActionResult<ConfigMenuItem>> AddPerspective([FromBody] ConfigMenuItem perspective)
         {
@@ -55,7 +55,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
 
-
+        // Updates a perspective
         [HttpPost("{id}")]
         public async Task<ActionResult<ConfigMenuItem>> UpdatePerspective(Guid id, [FromBody] ConfigMenuItem perspective)
         {
@@ -80,7 +80,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
 
-        // DELETE: api/Perspectives/{id}
+        // Deletes a perspective
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerspective(Guid id)
         {
