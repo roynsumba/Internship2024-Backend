@@ -87,7 +87,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldDescription == "Measurable Activity")
+                                     .Where(item => item.FieldName == "Measurable Activity")
                                      .ToListAsync();
             }
             catch (Exception ex)
@@ -127,7 +127,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 }
 
                 activityToUpdate.FieldName = activityItem.FieldName;
-                activityToUpdate.FieldDescription = activityItem.FieldDescription;
+                activityToUpdate.FieldName = activityItem.FieldName;
 
                 _context.ConfigMenuItems.Update(activityToUpdate);
                 await _context.SaveChangesAsync();
@@ -187,7 +187,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldDescription == "Objective")
+                                     .Where(item => item.FieldName == "Objective")
                                      .ToListAsync();
             }
             catch (Exception ex)
@@ -227,7 +227,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 }
 
                 objectiveToUpdate.FieldName = objectiveItem.FieldName;
-                objectiveToUpdate.FieldDescription = objectiveItem.FieldDescription;
+                objectiveToUpdate.FieldName = objectiveItem.FieldName;
 
                 _context.ConfigMenuItems.Update(objectiveToUpdate);
                 await _context.SaveChangesAsync();
