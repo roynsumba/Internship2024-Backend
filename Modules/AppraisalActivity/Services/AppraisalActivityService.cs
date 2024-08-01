@@ -19,7 +19,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         public Task<Implementation> UpdateImplementation(Implementation implementation);
 
         public Task<MeasurableActivityViewModel> AddMeasurableActivity(MeasurableActivityCreateModel measurableActivity);
-        public Task<Implementation> PostImplementation(Implementation implementation);
+        public Task<ImplementationViewModel> AddImplementation(ImplementationCreateModel implementation);
 
         public Task<bool> DeleteImplementation(int id);
 
@@ -121,18 +121,21 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             return addedActivity;
         }
 
-        public async Task<Implementation> PostImplementation(Implementation implementation)
+        public async Task<ImplementationViewModel> AddImplementation(ImplementationCreateModel implementation)
         {
-
-            if (_context.Implementations.Any(e => e.ImplementationId == implementation.ImplementationId))
+            var newImplementation = new Implementation
             {
-                throw new ClientFriendlyException("Implementation already exisitng");
-            }
+                Description = implementation.Description,
+                Comment = implementation.Comment,
+                Stakeholder = implementation.Stakeholder,
+                Evidence = implementation.Evidence,
+                Date = implementation.Date
+            };
 
-            _context.Implementations.Add(implementation);
+            await _context.Implementations.AddAsync(newImplementation);
             await _context.SaveChangesAsync();
-
-            return implementation;
+            var addedImplementation = _mapper.Map<Implementation, ImplementationViewModel>(newImplementation);
+            return addedImplementation;
         }
 
         public async Task<bool> DeleteImplementation(int id)

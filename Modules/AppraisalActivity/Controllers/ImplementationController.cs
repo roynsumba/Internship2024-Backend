@@ -51,11 +51,11 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         // POST: api/Implementations
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("CreateImplementation")]
-        public async Task<Implementation> PostImplementation(Implementation implementation)
+        public async Task<ImplementationViewModel> AddImplementation(ImplementationCreateModel implementation)
         {
 
 
-            return await _appraisalActivityService.PostImplementation(implementation);
+            return await _appraisalActivityService.AddImplementation(implementation);
         }
 
         // DELETE: api/Implementations/5
