@@ -7,13 +7,18 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 {
     public interface IConfigMenuItemService
     {
+        //General Configurable Items Methods
         Task<List<ConfigMenuItem>> FetchConfigMenuItems();
         Task<ConfigMenuItem> AddConfigMenuItem(ConfigMenuItem configMenuItem);
+
+        //Measurable activity Methods
         Task<ConfigMenuItem> AddActivityItem(ConfigMenuItem addActivityItem);
         Task<List<ConfigMenuItem>> GetAllActivityItems();
         Task<ConfigMenuItem?> GetAnActivityItem(Guid id);
         Task<ConfigMenuItem?> UpdateAnActivityItem(Guid id, ConfigMenuItem activityItem);
         Task<ConfigMenuItem?> DeleteAnActivity(Guid id);
+
+        //SSmartaObjectives Methods
         Task<ConfigMenuItem> AddObjectiveItem(ConfigMenuItem addObjectiveItem);
         Task<List<ConfigMenuItem>> GetAllObjectiveItems();
         Task<ConfigMenuItem?> GetAnObjectiveItem(Guid id);
