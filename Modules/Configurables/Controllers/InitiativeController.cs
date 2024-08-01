@@ -5,7 +5,7 @@ using AppraisalTracker.Modules.AppraisalActivity.Services;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 {
-    [Route("initiative")]
+    [Route("api/[controller]")]
     [ApiController]
     public class InitiativeController : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // Retrieves all initiatives.
-        [HttpGet]
+        [HttpGet("get-all-initiatives")]
         public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetInitiatives()
         {
             var initiatives = await _configMenuItemService.FetchInitiatives();
@@ -25,7 +25,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // Retrieves a single initiative
-        [HttpGet("{id}")]
+        [HttpGet("get-a-single-initiative/{id}")]
         public async Task<ActionResult<ConfigMenuItem>> GetInitiative(Guid id)
         {
             try
@@ -40,7 +40,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // Adds an initiative
-        [HttpPost]
+        [HttpPost("add-an-initiative")]
         public async Task<ActionResult<ConfigMenuItem>> AddInitiative([FromBody] ConfigMenuItem initiative)
         {
             try
@@ -56,7 +56,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
 
         // Updates an initiative
-        [HttpPut("{id}")]
+        [HttpPut("update-an-initiative/{id}")]
         public async Task<ActionResult<ConfigMenuItem>> UpdateInitiative(Guid id, ConfigMenuItem initiative)
         {
             try
@@ -76,7 +76,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
 
         // Deletes an initiative
-        [HttpDelete("{id}")]
+        [HttpDelete("delete-an-initiative{id}")]
         public async Task<ActionResult> DeleteInitiative(Guid id)
         {
             try
