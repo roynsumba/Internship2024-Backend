@@ -104,7 +104,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
                 if (activityItem == null)
                 {
-                    throw new ClientFriendlyException($"Couldn't find activity item with id '{id}'");
+                    throw new ClientFriendlyException($"Couldn't find activity item with id :'{id}'");
                 }
 
                 return activityItem;
