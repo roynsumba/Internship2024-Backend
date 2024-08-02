@@ -252,12 +252,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<List<ConfigMenuItem>> FetchPerspectives()
         {
-            return await _context.ConfigMenuItems.Where(e => e.FieldDescription == "Perspective").ToListAsync();
+            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Perspective").ToListAsync();
         }
 
         public async Task<ConfigMenuItem> FetchPerspective(Guid id)
         {
-            var perspective = await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldDescription == "Perspective");
+            var perspective = await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Perspective");
 
             if (perspective == null)
             {
@@ -269,7 +269,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<ConfigMenuItem> AddPerspective(ConfigMenuItem perspective)
         {
-            perspective.FieldDescription = "Perspective";
+            perspective.FieldName = "Perspective";
             return await AddConfigMenuItem(perspective);
         }
 
@@ -280,7 +280,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 throw new ClientFriendlyException("Id mismatch.");
             }
             var existingItem = await FetchPerspective(id);
-            existingItem.FieldName = perspective.FieldName;
+            existingItem.FieldDescription = perspective.FieldDescription;
             _context.ConfigMenuItems.Update(existingItem);
             await _context.SaveChangesAsync();
             return existingItem;
@@ -297,12 +297,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<List<ConfigMenuItem>> FetchInitiatives()
         {
-            return await _context.ConfigMenuItems.Where(e => e.FieldDescription == "Initiative").ToListAsync();
+            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Initiative").ToListAsync();
         }
 
         public async Task<ConfigMenuItem> FetchInitiative(Guid id)
         {
-            var initiative = await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldDescription == "Initiative");
+            var initiative = await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Initiative");
 
             if (initiative == null)
             {
@@ -314,7 +314,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<ConfigMenuItem> AddInitiative(ConfigMenuItem initiative)
         {
-            initiative.FieldDescription = "Initiative";
+            initiative.FieldName = "Initiative";
             return await AddConfigMenuItem(initiative);
         }
 
@@ -327,7 +327,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
             var existingItem = await FetchInitiative(id);
 
-            existingItem.FieldName = initiative.FieldName;
+            existingItem.FieldDescription = initiative.FieldDescription;
             _context.ConfigMenuItems.Update(existingItem);
             await _context.SaveChangesAsync();
             return existingItem;
