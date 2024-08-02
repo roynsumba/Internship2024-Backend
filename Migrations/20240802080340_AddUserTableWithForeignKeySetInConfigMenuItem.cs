@@ -6,22 +6,44 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppraisalTracker.Migrations
 {
     /// <inheritdoc />
-    public partial class initialmigration : Migration
+    public partial class AddUserTableWithForeignKeySetInConfigMenuItem : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Username = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "ConfigMenuItems",
                 columns: table => new
                 {
                     ItemId = table.Column<Guid>(type: "uuid", nullable: false),
                     FieldName = table.Column<string>(type: "text", nullable: false),
-                    FieldDescription = table.Column<string>(type: "text", nullable: false)
+                    FieldDescription = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ConfigMenuItems", x => x.ItemId);
+                    table.ForeignKey(
+                        name: "FK_ConfigMenuItems_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,6 +111,11 @@ namespace AppraisalTracker.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConfigMenuItems_UserId",
+                table: "ConfigMenuItems",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Implementations_MeasurableActivityId",
                 table: "Implementations",
                 column: "MeasurableActivityId");
@@ -130,6 +157,9 @@ namespace AppraisalTracker.Migrations
 
             migrationBuilder.DropTable(
                 name: "ConfigMenuItems");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

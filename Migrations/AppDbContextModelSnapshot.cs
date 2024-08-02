@@ -36,7 +36,12 @@ namespace AppraisalTracker.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("ItemId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ConfigMenuItems");
                 });
@@ -108,6 +113,48 @@ namespace AppraisalTracker.Migrations
                     b.HasIndex("SsMartaObjectivesId");
 
                     b.ToTable("MeasurableActivities");
+                });
+
+            modelBuilder.Entity("AppraisalTracker.Modules.Users.User", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.ConfigMenuItem", b =>
+                {
+                    b.HasOne("AppraisalTracker.Modules.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.Implementation", b =>
