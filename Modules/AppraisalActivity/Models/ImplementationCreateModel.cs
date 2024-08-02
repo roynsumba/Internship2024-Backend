@@ -8,6 +8,6 @@
         public string? Stakeholder { get; set; }
         public string Evidence { get; set; } = string.Empty;
         public DateTime Date { get; set; }
-
+        public required Guid MeasurableActivityId { get; set; }
     }
 }

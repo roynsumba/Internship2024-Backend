@@ -23,7 +23,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // GET: api/MeasurableActivities
         [HttpGet("GetMeasurableActivities")]
-        public async Task<ActionResult<MeasurableActivity>> GetMeasurableActivities()
+        public async Task<ActionResult<MeasurableActivityViewModel>> GetMeasurableActivities()
         {
             var measurableActivities = await _appraisalActivityService.FetchMeasurableActivities();
             return Ok(measurableActivities);

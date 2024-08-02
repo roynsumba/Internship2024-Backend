@@ -8,7 +8,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 {
     public interface IAppraisalActivityService
     {
-        public Task<List<MeasurableActivity>> FetchMeasurableActivities();
+        public Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities();
         public Task<List<Implementation>> FetchImplementations();
         public Task<MeasurableActivity> FetchMeasurableActivity(int id);
         public Task<Implementation> FetchImplementation(int id);
@@ -32,9 +32,10 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         public readonly AppDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<List<MeasurableActivity>> FetchMeasurableActivities()
+        public async Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities()
         {
-            return await _context.MeasurableActivities.Include(x => x.Implementation).ToListAsync();
+            var measurableActivities = await _context.MeasurableActivities.Include(x => x.Implementation).ToListAsync();
+            return _mapper.Map<List<MeasurableActivityViewModel>>(measurableActivities);
         }
 
         public async Task<List<Implementation>> FetchImplementations()
@@ -111,7 +112,6 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 InitiativeId = measurableActivity.InitiativeId,
                 PeriodId = measurableActivity.PeriodId,
                 PerspectiveId = measurableActivity.PerspectiveId,
-                Implementation = measurableActivity.Implementation,
                 SsMartaObjectivesId = measurableActivity.SsMartaObjectivesId
             };
 
@@ -129,7 +129,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 Comment = implementation.Comment,
                 Stakeholder = implementation.Stakeholder,
                 Evidence = implementation.Evidence,
-                Date = implementation.Date
+                Date = implementation.Date,
+                MeasurableActivityId = implementation.MeasurableActivityId
             };
 
             await _context.Implementations.AddAsync(newImplementation);
