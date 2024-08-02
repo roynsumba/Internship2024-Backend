@@ -1,26 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using AppraisalTracker.Modules.AppraisalActivity.Services;
+using AppraisalTracker.Modules.Users.Service; // Ensure this line is present
 using AppraisalTracker.Data;
-using AppraisalTracker.Extensions;
-
-
+using AutoMapper;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
 var assemblies = new[] { typeof(Program).Assembly };
-builder.ConfigureAutoMapper(assemblies);
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(assemblies);
 builder.Services.AddScoped<IAppraisalActivityService, AppraisalActivityService>();
+builder.Services.AddScoped<IUsersService, UserService>(); // Fix the typo here, it should be UserService
 builder.Services.AddScoped<IConfigMenuItemService, ConfigMenuItemService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "AppraisalTracker API", Version = "v1" });
+});
 
 // Register DbContext
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -32,8 +33,12 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AppraisalTracker API v1");
+    });
 }
 
 app.UseHttpsRedirection();
@@ -43,6 +48,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-

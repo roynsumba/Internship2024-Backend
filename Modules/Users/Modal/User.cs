@@ -1,0 +1,27 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace AppraisalTracker.Modules.Users
+{
+    public class User
+    {
+        [Key]
+        public Guid UserId { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public required string Username { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public required string Password { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public required string FirstName { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public required string LastName { get; set; }
+    }
+}
