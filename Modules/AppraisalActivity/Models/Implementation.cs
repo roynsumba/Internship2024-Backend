@@ -21,7 +21,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         [Required]
         public DateTime Date { get; set; }
 
-        public Guid MeasurableActivityId { get; set; }
+        public required Guid MeasurableActivityId { get; set; }
 
         [ForeignKey(nameof(MeasurableActivityId))]
 

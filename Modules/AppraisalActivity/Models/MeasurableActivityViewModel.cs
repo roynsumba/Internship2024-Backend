@@ -10,7 +10,6 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         public Guid? InitiativeId { get; set; }
 
         public List<Implementation> Implementation { get; set; } = [];
-        public DateTime? DateOfReceipt { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastUpdated { get; set; }
 

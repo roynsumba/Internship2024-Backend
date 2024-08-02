@@ -8,7 +8,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 {
     public interface IAppraisalActivityService
     {
-        public Task<List<MeasurableActivity>> FetchMeasurableActivities();
+        public Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities();
         public Task<List<Implementation>> FetchImplementations();
         public Task<MeasurableActivity> FetchMeasurableActivity(int id);
         public Task<Implementation> FetchImplementation(int id);
@@ -23,7 +23,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public Task<bool> DeleteImplementation(int id);
 
-
+        public Task<string> GetUploadedFilePath(IFormFile formFile);
 
     }
     public class AppraisalActivityService(AppDbContext context, IMapper mapper) : IAppraisalActivityService
@@ -32,9 +32,10 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         public readonly AppDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<List<MeasurableActivity>> FetchMeasurableActivities()
+        public async Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities()
         {
-            return await _context.MeasurableActivities.Include(x => x.Implementation).ToListAsync();
+            var measurableActivities = await _context.MeasurableActivities.Include(x => x.Implementation).ToListAsync();
+            return _mapper.Map<List<MeasurableActivityViewModel>>(measurableActivities);
         }
 
         public async Task<List<Implementation>> FetchImplementations()
@@ -111,7 +112,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 InitiativeId = measurableActivity.InitiativeId,
                 PeriodId = measurableActivity.PeriodId,
                 PerspectiveId = measurableActivity.PerspectiveId,
-                Implementation = measurableActivity.Implementation,
+                //Implementation = measurableActivity.Implementation,
                 SsMartaObjectivesId = measurableActivity.SsMartaObjectivesId
             };
 
@@ -128,9 +129,14 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 Description = implementation.Description,
                 Comment = implementation.Comment,
                 Stakeholder = implementation.Stakeholder,
-                Evidence = implementation.Evidence,
-                Date = implementation.Date
+                // Evidence = implementation.Evidence,
+                Date = implementation.Date,
+                MeasurableActivityId = implementation.MeasurableActivityId,
             };
+            if (implementation.Evidence != null)
+            {
+                newImplementation.Evidence = await GetUploadedFilePath(implementation.Evidence);
+            }
 
             await _context.Implementations.AddAsync(newImplementation);
             await _context.SaveChangesAsync();
@@ -156,6 +162,23 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         }
 
+        public async Task<string> GetUploadedFilePath(IFormFile formFile)
+        {
+            if (formFile == null || formFile.Length == 0)
+                throw new ClientFriendlyException("No file was uploaded!");
+            var uploadPath = Path.Combine(@"C:\Documents", "Evidence Uploads");
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
+            var fileName = Path.GetRandomFileName();
+            var filePath = Path.Combine(uploadPath, fileName);
+
+            using var stream = new FileStream(filePath, FileMode.Create);
+            await formFile.CopyToAsync(stream);
+            return filePath;
+        }
     }
 }
 
