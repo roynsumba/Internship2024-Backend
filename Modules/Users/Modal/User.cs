@@ -16,11 +16,10 @@ namespace AppraisalTracker.Modules.Users
         [StringLength(100)]
         public required string Password { get; set; }
 
-        [Required]
+    
         [StringLength(100)]
         public required string FirstName { get; set; }
 
-        [Required]
         [StringLength(100)]
         public required string LastName { get; set; }
     }

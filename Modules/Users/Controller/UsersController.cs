@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using AppraisalTracker.Modules.Users.Service;
 using System.Threading.Tasks;
+using System;
+using AppraisalTracker.Modules.Login;
 
 namespace AppraisalTracker.Modules.Users.Controllers
 {
@@ -31,7 +33,7 @@ namespace AppraisalTracker.Modules.Users.Controllers
             return Ok(users);
         }
 
-        // Get All Users
+        // Get single user
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetSingleUser(Guid userId)
         {
@@ -39,11 +41,24 @@ namespace AppraisalTracker.Modules.Users.Controllers
             return Ok(user);
         }
 
+        // Delete user
         [HttpDelete("delete-user/{userId}")]
         public async Task<IActionResult> DeleteUser(Guid userId)
         {
             var deletedUser = await _usersService.DeleteUser(userId);
             return Ok(deletedUser);
+        }
+
+        // Authenticate User
+        [HttpPost("login")]
+        public async Task<UserLoginViewModel> AuthenticateUser([FromBody] LoginModel user)
+        {
+            Console.WriteLine($"Received Username: {user}");
+
+           var authenticated= await _usersService.AuthenticateUser(user.Username, user.Password);
+
+            // var authenticated = await _usersService.AuthenticateUser(user.Username, user.Password);
+            return authenticated;
         }
     }
 }

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using AppraisalTracker.Modules.AppraisalActivity.Services;
-using AppraisalTracker.Modules.Users.Service; // Ensure this line is present
+using AppraisalTracker.Modules.Users.Service;
 using AppraisalTracker.Data;
 using AutoMapper;
 using Microsoft.OpenApi.Models;
@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 var assemblies = new[] { typeof(Program).Assembly };
 builder.Services.AddAutoMapper(assemblies);
 builder.Services.AddScoped<IAppraisalActivityService, AppraisalActivityService>();
-builder.Services.AddScoped<IUsersService, UserService>(); // Fix the typo here, it should be UserService
+builder.Services.AddScoped<IUsersService, UserService>();
 builder.Services.AddScoped<IConfigMenuItemService, ConfigMenuItemService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -21,6 +21,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "AppraisalTracker API", Version = "v1" });
+});
+
+// Register CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("staffAppraisalTracker", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 // Register DbContext
@@ -41,10 +53,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("staffAppraisalTracker");
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

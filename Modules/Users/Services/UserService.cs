@@ -1,7 +1,9 @@
 using AppraisalTracker.Data;
 using AppraisalTracker.Exceptions;
+using AppraisalTracker.Modules.Login;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,6 +15,7 @@ namespace AppraisalTracker.Modules.Users.Service
         Task<User> GetSingleUser(Guid userId);
         Task<List<User>> GetAllUsers();
         Task<User> DeleteUser(Guid userId);
+        Task<UserLoginViewModel> AuthenticateUser(string username, string password);
     }
 
     public class UserService : IUsersService
@@ -33,17 +36,39 @@ namespace AppraisalTracker.Modules.Users.Service
             return entityEntry.Entity;
         }
 
+        public async Task<UserLoginViewModel> AuthenticateUser(string username, string password)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+
+            if (user != null)
+            {
+                var data = new UserLoginViewModel 
+                {
+                    UserId = user.UserId,
+                    Username = user.Username,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+                return data;
+            }
+            else
+            {
+                throw new ClientFriendlyException("Invalid username or password");
+            }
+        }
+
         public async Task<User> DeleteUser(Guid userId)
         {
-
             var userToDelete = await _context.Users.FindAsync(userId);
-            
-            if (userToDelete== null)
+
+            if (userToDelete == null)
             {
                 throw new ClientFriendlyException("User does not exist");
             }
+
             _context.Users.Remove(userToDelete);
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return userToDelete;
         }
 
@@ -59,10 +84,10 @@ namespace AppraisalTracker.Modules.Users.Service
 
             if (user == null)
             {
-                throw new ClientFriendlyException("User not exist");
+                throw new ClientFriendlyException("User does not exist");
             }
-            return user;
 
+            return user;
         }
     }
 }
