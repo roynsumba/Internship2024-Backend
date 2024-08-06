@@ -3,7 +3,7 @@ using AppraisalTracker.Modules.AppraisalActivity.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
+namespace AppraisalTracker.Modules.Configurables.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

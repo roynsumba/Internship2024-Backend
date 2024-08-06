@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/ssmarta-objective")]
     [ApiController]
     public class ObjectiveController : ControllerBase
     {

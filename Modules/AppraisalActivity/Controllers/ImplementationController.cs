@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AppraisalTracker.Modules.AppraisalActivity.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AppraisalTracker.Modules.AppraisalActivity.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AppraisalTracker.Data;
 using AppraisalTracker.Modules.AppraisalActivity.Services;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
@@ -33,9 +25,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // GET: api/Implementations/5
         [HttpGet("get-one-implementation")]
-        public async Task<Implementation> FetchImplementation(int id)
+        public async Task<Implementation> FetchImplementation(Guid Id)
         {
-            var implementation = await _appraisalActivityService.FetchImplementation(id);
+            var implementation = await _appraisalActivityService.FetchImplementation(Id);
             return implementation;
         }
 
@@ -70,15 +62,15 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
             return File(filedetails.Evidence, filedetails.EvidenceContentType, filedetails.EvidenceFileName);
         }
-    
 
 
 
-    // DELETE: api/Implementations/5
-    [HttpDelete("delete-an-implementation")]
-        public async Task<ActionResult> DeleteImplementation(int id)
+
+        // DELETE: api/Implementations/5
+        [HttpDelete("delete-an-implementation")]
+        public async Task<ActionResult> DeleteImplementation(Guid Id)
         {
-            bool result = await _appraisalActivityService.DeleteImplementation(id);
+            bool result = await _appraisalActivityService.DeleteImplementation(Id);
             if (result)
             {
                 return Ok();

@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AppraisalTracker.Modules.AppraisalActivity.Models;
-using Microsoft.AspNetCore.Http;
+﻿using AppraisalTracker.Modules.AppraisalActivity.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AppraisalTracker.Data;
 using AppraisalTracker.Modules.AppraisalActivity.Services;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
@@ -22,7 +15,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // GET: api/MeasurableActivities
-        [HttpGet("GetMeasurableActivities")]
+        [HttpGet("get-all-measurable-activities")]
         public async Task<ActionResult<MeasurableActivityViewModel>> GetMeasurableActivities()
         {
             var measurableActivities = await _appraisalActivityService.FetchMeasurableActivities();
@@ -30,26 +23,26 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // GET: api/MeasurableActivities/5
-        [HttpGet("GetOneMeasurableActivity")]
-        public async Task<ActionResult<MeasurableActivity>> GetMeasurableActivity(int id)
+        [HttpGet("get-a-measurable-activity")]
+        public async Task<ActionResult<MeasurableActivity>> GetMeasurableActivity(Guid Id)
         {
-            var measurableActivity = await _appraisalActivityService.FetchMeasurableActivity(id);
+            var measurableActivity = await _appraisalActivityService.FetchMeasurableActivity(Id);
             return measurableActivity;
 
         }
 
         // PUT: api/MeasurableActivities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("UpdateMeasurableActivities/{id}")]
-        public async Task<ActionResult<MeasurableActivity>> UpdateMeasurableActivity(int id, [FromBody] MeasurableActivity measurableActivity)
+        [HttpPut("update-measurable-activity/{id}")]
+        public async Task<ActionResult<MeasurableActivity>> UpdateMeasurableActivity(Guid Id, [FromBody] MeasurableActivity measurableActivity)
         {
-            var updatedActivity = await _appraisalActivityService.UpdateMeasurableActivity(id, measurableActivity);
+            var updatedActivity = await _appraisalActivityService.UpdateMeasurableActivity(Id, measurableActivity);
             return Ok(updatedActivity);
         }
 
         // POST: api/MeasurableActivities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("CreateMeasurableActivity")]
+        [HttpPost("aad-measurable-activity")]
         public async Task<MeasurableActivityViewModel> AddMeasurableActivity(MeasurableActivityCreateModel measurableActivity)
         {
             return await _appraisalActivityService.AddMeasurableActivity(measurableActivity);

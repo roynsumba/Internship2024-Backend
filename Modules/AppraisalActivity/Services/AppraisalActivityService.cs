@@ -10,18 +10,18 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
     {
         public Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities();
         public Task<List<Implementation>> FetchImplementations();
-        public Task<MeasurableActivity> FetchMeasurableActivity(int id);
-        public Task<Implementation> FetchImplementation(int id);
+        public Task<MeasurableActivity> FetchMeasurableActivity(Guid Id);
+        public Task<Implementation> FetchImplementation(Guid Id);
 
-        public Task<MeasurableActivity> UpdateMeasurableActivity(int id, MeasurableActivity measurableActivity);
-        public Task<bool> DeleteMeasurableActivity(int id);
+        public Task<MeasurableActivity> UpdateMeasurableActivity(Guid Id, MeasurableActivity measurableActivity);
+        public Task<bool> DeleteMeasurableActivity(Guid Id);
 
         public Task<Implementation> UpdateImplementation(Implementation implementation);
 
         public Task<MeasurableActivityViewModel> AddMeasurableActivity(MeasurableActivityCreateModel measurableActivity);
         public Task<ImplementationViewModel> AddImplementation(ImplementationCreateModel implementation);
 
-        public Task<bool> DeleteImplementation(int id);
+        public Task<bool> DeleteImplementation(Guid Id);
         public Task<ImplementationViewModel> FetchEvidence(Guid id);
 
 
@@ -44,22 +44,22 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             return await _context.Implementations.ToListAsync();
         }
 
-        public async Task<MeasurableActivity> FetchMeasurableActivity(int id)
+        public async Task<MeasurableActivity> FetchMeasurableActivity(Guid Id)
         {
 
-            var measurableActivity = await _context.MeasurableActivities.FindAsync(id);
+            var measurableActivity = await _context.MeasurableActivities.FindAsync(Id);
 
-            return measurableActivity ?? throw new KeyNotFoundException("Measurable activity not found.");
+            return measurableActivity ?? throw new ClientFriendlyException("Measurable activity not found.");
         }
 
-        public async Task<Implementation> FetchImplementation(int id)
+        public async Task<Implementation> FetchImplementation(Guid Id)
         {
-            var implementation = await _context.Implementations.FindAsync(id);
+            var implementation = await _context.Implementations.FindAsync(Id);
 
-            return implementation ?? throw new KeyNotFoundException("Measurable activity not found.");
+            return implementation ?? throw new ClientFriendlyException("Implementation not found.");
         }
 
-        public async Task<MeasurableActivity> UpdateMeasurableActivity(int id, MeasurableActivity measurableActivity)
+        public async Task<MeasurableActivity> UpdateMeasurableActivity(Guid Id, MeasurableActivity measurableActivity)
         {
 
             if (_context.MeasurableActivities.Any(e => e.MeasurableActivityId == measurableActivity.MeasurableActivityId))
@@ -71,7 +71,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 return measurableActivity;
 
             }
-            throw new ClientFriendlyException("no measurable activity found");
+            throw new ClientFriendlyException("No measurable activity found");
 
 
         }
@@ -87,14 +87,14 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 return implementation;
 
             }
-            throw new ClientFriendlyException("no implementation found");
+            throw new ClientFriendlyException("No implementation found");
 
 
         }
 
-        public async Task<bool> DeleteMeasurableActivity(int id)
+        public async Task<bool> DeleteMeasurableActivity(Guid Id)
         {
-            var measurableActivity = await _context.MeasurableActivities.FindAsync(id);
+            var measurableActivity = await _context.MeasurableActivities.FindAsync(Id);
             if (measurableActivity == null)
             {
                 return false;
@@ -127,48 +127,44 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
             if (implementation.Evidence == null || implementation.Evidence.Length == 0)
             {
-                throw new Exception("Evidence file is required.");
+                throw new ClientFriendlyException("Evidence file is required.");
             }
 
-            using (var memoryStream = new MemoryStream())
+            using var memoryStream = new MemoryStream();
+            await implementation.Evidence.CopyToAsync(memoryStream);
 
+            // Check if the file size is within the 2 MB limit (2099990 bytes)
+
+            if (memoryStream.Length < 2099990)
             {
-                await implementation.Evidence.CopyToAsync(memoryStream);
+
+                byte[] filevar = memoryStream.ToArray();
 
 
-                // Check if the file size is within the 10 MB limit (1097152 bytes)
-
-                if (memoryStream.Length < 10097152)
+                var newImplementation = new Implementation
                 {
-
-                    byte[] filevar = memoryStream.ToArray();
-
-
-                    var newImplementation = new Implementation
-                    {
-                        Description = implementation.Description,
-                        Comment = implementation.Comment,
-                        Stakeholder = implementation.Stakeholder,
-                        Evidence = filevar,
-                        EvidenceContentType = implementation.Evidence.ContentType,
-                        EvidenceFileName = implementation.Evidence.FileName,
-                        Date = implementation.Date,
-                        MeasurableActivityId = implementation.MeasurableActivityId
-                    };
+                    Description = implementation.Description,
+                    Comment = implementation.Comment,
+                    Stakeholder = implementation.Stakeholder,
+                    Evidence = filevar,
+                    EvidenceContentType = implementation.Evidence.ContentType,
+                    EvidenceFileName = implementation.Evidence.FileName,
+                    Date = implementation.Date,
+                    MeasurableActivityId = implementation.MeasurableActivityId
+                };
 
 
-                    await _context.Implementations.AddAsync(newImplementation);
-                    await _context.SaveChangesAsync();
+                await _context.Implementations.AddAsync(newImplementation);
+                await _context.SaveChangesAsync();
 
 
-                    var addedImplementation = _mapper.Map<Implementation, ImplementationViewModel>(newImplementation);
-                    return addedImplementation;
-                }
-                else
-                {
+                var addedImplementation = _mapper.Map<Implementation, ImplementationViewModel>(newImplementation);
+                return addedImplementation;
+            }
+            else
+            {
 
-                    throw new Exception("File size exceeds the 2 MB limit.");
-                }
+                throw new ClientFriendlyException("File size exceeds the 2 MB limit.");
             }
         }
 
@@ -180,9 +176,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             return uploadedFileView;
         }
 
-        public async Task<bool> DeleteImplementation(int id)
+        public async Task<bool> DeleteImplementation(Guid Id)
         {
-            var implementation = await _context.Implementations.FindAsync(id);
+            var implementation = await _context.Implementations.FindAsync(Id);
             if (implementation != null)
             {
                 _context.Implementations.Remove(implementation);
