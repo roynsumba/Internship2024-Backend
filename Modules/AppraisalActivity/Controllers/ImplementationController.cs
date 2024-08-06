@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AppraisalTracker.Modules.AppraisalActivity.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AppraisalTracker.Modules.AppraisalActivity.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AppraisalTracker.Data;
 using AppraisalTracker.Modules.AppraisalActivity.Services;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
@@ -24,7 +16,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // GET: api/Implementations
-        [HttpGet("GetImplementations")]
+        [HttpGet("get-all-implementations")]
         public async Task<ActionResult<List<Implementation>>> GetImplementations()
         {
             var implementation = await _appraisalActivityService.FetchImplementations();
@@ -32,16 +24,16 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // GET: api/Implementations/5
-        [HttpGet("GetOneImplementation")]
-        public async Task<Implementation> FetchImplementation(int id)
+        [HttpGet("get-one-implementation")]
+        public async Task<Implementation> FetchImplementation(Guid Id)
         {
-            var implementation = await _appraisalActivityService.FetchImplementation(id);
+            var implementation = await _appraisalActivityService.FetchImplementation(Id);
             return implementation;
         }
 
         // PUT: api/Implementations/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("UpdateImplementation")]
+        [HttpPost("update-an-implementation")]
         public async Task<Implementation> UpdateImplementation([FromBody] Implementation implementation)
         {
             return await _appraisalActivityService.UpdateImplementation(implementation);
@@ -50,19 +42,35 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // POST: api/Implementations
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("CreateImplementation")]
-        public async Task<ImplementationViewModel> AddImplementation(ImplementationCreateModel implementation)
+        [HttpPost("create-an-implementation")]
+        public async Task<ImplementationViewModel> AddImplementation([FromForm] ImplementationCreateModel implementation)
         {
 
 
             return await _appraisalActivityService.AddImplementation(implementation);
         }
 
-        // DELETE: api/Implementations/5
-        [HttpDelete("DeleteImplementation")]
-        public async Task<ActionResult> DeleteImplementation(int id)
+
+        [HttpGet("get-evidence-file")]
+        public async Task<IActionResult> FetchEvidenceFile(Guid id)
         {
-            bool result = await _appraisalActivityService.DeleteImplementation(id);
+            var filedetails = await _appraisalActivityService.FetchEvidence(id);
+            if (filedetails.Evidence == null || string.IsNullOrEmpty(filedetails.EvidenceContentType) || string.IsNullOrEmpty(filedetails.EvidenceFileName))
+            {
+                return NotFound("Evidence details are incomplete.");
+            }
+
+            return File(filedetails.Evidence, filedetails.EvidenceContentType, filedetails.EvidenceFileName);
+        }
+
+
+
+
+        // DELETE: api/Implementations/5
+        [HttpDelete("delete-an-implementation")]
+        public async Task<ActionResult> DeleteImplementation(Guid Id)
+        {
+            bool result = await _appraisalActivityService.DeleteImplementation(Id);
             if (result)
             {
                 return Ok();

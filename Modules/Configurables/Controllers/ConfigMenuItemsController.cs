@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 {
-    [Route("api/ConfigMenuItems")]
+    [Route("api/configurables")]
     [ApiController]
     public class ConfigMenuItemsController : ControllerBase
     {
@@ -15,15 +15,15 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             _configMenuItemService = configMenuItemService;
         }
 
-
-        [HttpGet("GetConfigMenuItems")]
+        [HttpGet("get-all-config-items")]
         public async Task<ActionResult<ConfigMenuItem>> GetConfigMenuItems(Guid userId)
+
         {
             var configMenuItems = await _configMenuItemService.FetchConfigMenuItems(userId);
             return Ok(configMenuItems);
         }
 
-        [HttpPost("CreateConfigMenuItem")]
+        [HttpPost("add-config-item")]
         public async Task<ConfigMenuItem> PostConfigMenuItem(ConfigMenuItem configMenuItem)
         {
             return await _configMenuItemService.AddConfigMenuItem(configMenuItem);
