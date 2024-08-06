@@ -16,7 +16,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         public string? Stakeholder { get; set; }
 
         [Required]
-        public string Evidence { get; set; } = string.Empty;
+        public byte[] Evidence { get; set; } = [];
+        
+        public string? EvidenceContentType { get; set; } 
+
+        public string? EvidenceFileName { get; set; } 
+
 
         [Required]
         public DateTime Date { get; set; }
