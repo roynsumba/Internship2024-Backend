@@ -12,6 +12,6 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         public List<Implementation> Implementation { get; set; } = [];
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastUpdated { get; set; }
-
+        public Guid UserId { get; set; }
     }
 }

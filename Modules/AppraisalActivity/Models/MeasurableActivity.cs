@@ -22,6 +22,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         public ConfigMenuItem? ConfigInitiativeId { get; set; }
 
         public List<Implementation> Implementation { get; set; } = [];
+        [ForeignKey("User")]
+        public required Guid? UserId { get; set; }
 
     }
 }

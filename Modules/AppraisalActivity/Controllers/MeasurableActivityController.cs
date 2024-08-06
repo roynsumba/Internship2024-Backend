@@ -15,10 +15,10 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // GET: api/MeasurableActivities
-        [HttpGet("get-all-measurable-activities")]
-        public async Task<ActionResult<MeasurableActivityViewModel>> GetMeasurableActivities()
+        [HttpGet("get-all-measurable-activities{userId}")]
+        public async Task<ActionResult<MeasurableActivityViewModel>> GetMeasurableActivities([FromRoute]  Guid userId)
         {
-            var measurableActivities = await _appraisalActivityService.FetchMeasurableActivities();
+            var measurableActivities = await _appraisalActivityService.FetchMeasurableActivities(userId);
             return Ok(measurableActivities);
         }
 
@@ -42,7 +42,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // POST: api/MeasurableActivities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("aad-measurable-activity")]
+        [HttpPost("add-measurable-activity")]
         public async Task<MeasurableActivityViewModel> AddMeasurableActivity(MeasurableActivityCreateModel measurableActivity)
         {
             return await _appraisalActivityService.AddMeasurableActivity(measurableActivity);

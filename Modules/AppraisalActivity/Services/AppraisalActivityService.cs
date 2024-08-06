@@ -8,8 +8,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 {
     public interface IAppraisalActivityService
     {
-        public Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities();
-        public Task<List<Implementation>> FetchImplementations();
+        public Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities(Guid userId);
+        public Task<List<ImplementationViewModel>> FetchImplementations(Guid userId);
         public Task<MeasurableActivity> FetchMeasurableActivity(Guid Id);
         public Task<Implementation> FetchImplementation(Guid Id);
 
@@ -22,7 +22,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         public Task<ImplementationViewModel> AddImplementation(ImplementationCreateModel implementation);
 
         public Task<bool> DeleteImplementation(Guid Id);
-        public Task<ImplementationViewModel> FetchEvidence(Guid id);
+        public Task<Implementation> FetchEvidence(Guid id);
 
 
 
@@ -33,15 +33,16 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         public readonly AppDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities()
+        public async Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities(Guid userId)
         {
-            var measurableActivities = await _context.MeasurableActivities.Include(x => x.Implementation).ToListAsync();
+            var measurableActivities = await _context.MeasurableActivities.Where(u => u.UserId == userId).Include(d => d.Implementation).FirstOrDefaultAsync();
             return _mapper.Map<List<MeasurableActivityViewModel>>(measurableActivities);
         }
 
-        public async Task<List<Implementation>> FetchImplementations()
+        public async Task<List<ImplementationViewModel>> FetchImplementations(Guid userId)
         {
-            return await _context.Implementations.ToListAsync();
+          var implementations =await _context.Implementations.Where(u => u.UserId == userId).ToListAsync();
+            return _mapper.Map<List<ImplementationViewModel>>(implementations);
         }
 
         public async Task<MeasurableActivity> FetchMeasurableActivity(Guid Id)
@@ -113,7 +114,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 InitiativeId = measurableActivity.InitiativeId,
                 PeriodId = measurableActivity.PeriodId,
                 PerspectiveId = measurableActivity.PerspectiveId,
-                SsMartaObjectivesId = measurableActivity.SsMartaObjectivesId
+                SsMartaObjectivesId = measurableActivity.SsMartaObjectivesId,
+                UserId = measurableActivity.UserId,
             };
 
             await _context.MeasurableActivities.AddAsync(newMeasurableActivity);
@@ -149,8 +151,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                     Evidence = filevar,
                     EvidenceContentType = implementation.Evidence.ContentType,
                     EvidenceFileName = implementation.Evidence.FileName,
-                    Date = implementation.Date,
-                    MeasurableActivityId = implementation.MeasurableActivityId
+                    CreatedDate = implementation.CreatedDate,
+                    MeasurableActivityId = implementation.MeasurableActivityId,
+                    UserId = implementation.UserId
                 };
 
 
@@ -168,12 +171,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             }
         }
 
-        public async Task<ImplementationViewModel> FetchEvidence(Guid id)
+        public async Task<Implementation> FetchEvidence(Guid id)
         {
             var uploadedFile = await _context.Implementations.FindAsync(id) ?? throw new ClientFriendlyException("No implementation found");
-            var uploadedFileView = _mapper.Map<Implementation, ImplementationViewModel>(uploadedFile);
+            //var uploadedFileView = _mapper.Map<Implementation, ImplementationViewModel>(uploadedFile);
 
-            return uploadedFileView;
+            return uploadedFile;
         }
 
         public async Task<bool> DeleteImplementation(Guid Id)

@@ -24,7 +24,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
 
 
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public required Guid MeasurableActivityId { get; set; }
 
@@ -33,5 +33,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         [JsonIgnore]
         public MeasurableActivity? MeasurableActivity { get; set; }
 
+        [ForeignKey("User")]
+        public required Guid? UserId { get; set; }
     }
 }

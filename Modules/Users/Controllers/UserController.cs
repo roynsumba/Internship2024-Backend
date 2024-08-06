@@ -16,7 +16,7 @@ namespace AppraisalTracker.Modules.Users.Controllers
         }
 
         // Add new user
-        [HttpPost]
+        [HttpPost("register-user")]
         public async Task<IActionResult> AddUser([FromBody] User newUser)
         {
             var addedUser = await _userService.AddUser(newUser);
@@ -24,7 +24,7 @@ namespace AppraisalTracker.Modules.Users.Controllers
         }
 
         // GET: api/Users
-        [HttpGet("all-users")]
+        [HttpGet("get-all-users")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userService.GetAllUsers();
@@ -32,7 +32,7 @@ namespace AppraisalTracker.Modules.Users.Controllers
         }
 
         // Get single user
-        [HttpGet("user/{userId}")]
+        [HttpGet("get-user/{userId}")]
         public async Task<IActionResult> GetSingleUser(Guid userId)
         {
             var user = await _userService.GetSingleUser(userId);

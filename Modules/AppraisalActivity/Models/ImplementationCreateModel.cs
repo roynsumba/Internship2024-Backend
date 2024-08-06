@@ -12,7 +12,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         public string? EvidenceContentType { get; set; } 
 
         public string? EvidenceFileName { get; set; } 
-        public DateTime Date { get; set; }
+        public DateTime CreatedDate { get; set; }
         public required Guid MeasurableActivityId { get; set; }
+        public required Guid UserId { get; set; }
+        
     }
 }

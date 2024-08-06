@@ -17,8 +17,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // Retrieves all initiatives.
-        [HttpGet("get-all-initiatives")]
-        public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetInitiatives(Guid userId)
+        [HttpGet("get-all-initiatives/{userId}")]
+        public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetInitiatives([FromRoute] Guid userId)
         {
             var initiatives = await _configMenuItemService.FetchInitiatives(userId);
             return Ok(initiatives);
