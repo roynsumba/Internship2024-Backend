@@ -1,15 +1,11 @@
 using AppraisalTracker.Data;
 using AppraisalTracker.Exceptions;
-using AppraisalTracker.Modules.Login;
+using AppraisalTracker.Modules.Users.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace AppraisalTracker.Modules.Users.Service
+namespace AppraisalTracker.Modules.Users.Services
 {
-    public interface IUsersService
+    public interface IUserService
     {
         Task<User> AddUser(User newUser);
         Task<User> GetSingleUser(Guid userId);
@@ -18,7 +14,7 @@ namespace AppraisalTracker.Modules.Users.Service
         Task<UserLoginViewModel> AuthenticateUser(string username, string password);
     }
 
-    public class UserService : IUsersService
+    public class UserService : IUserService
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
@@ -43,7 +39,7 @@ namespace AppraisalTracker.Modules.Users.Service
 
             if (user != null)
             {
-                var data = new UserLoginViewModel 
+                var data = new UserLoginViewModel
                 {
                     UserId = user.UserId,
                     Username = user.Username,

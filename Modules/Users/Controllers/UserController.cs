@@ -1,27 +1,25 @@
+using AppraisalTracker.Modules.Users.Models;
+using AppraisalTracker.Modules.Users.Services;
 using Microsoft.AspNetCore.Mvc;
-using AppraisalTracker.Modules.Users.Service;
-using System.Threading.Tasks;
-using System;
-using AppraisalTracker.Modules.Login;
 
 namespace AppraisalTracker.Modules.Users.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IUsersService _usersService;
+        private readonly IUserService _userService;
 
-        public UsersController(IUsersService usersService)
+        public UserController(IUserService userService)
         {
-            _usersService = usersService;
+            _userService = userService;
         }
 
         // Add new user
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] User newUser)
         {
-            var addedUser = await _usersService.AddUser(newUser);
+            var addedUser = await _userService.AddUser(newUser);
             return Ok(addedUser);
         }
 
@@ -29,7 +27,7 @@ namespace AppraisalTracker.Modules.Users.Controllers
         [HttpGet("all-users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _usersService.GetAllUsers();
+            var users = await _userService.GetAllUsers();
             return Ok(users);
         }
 
@@ -37,7 +35,7 @@ namespace AppraisalTracker.Modules.Users.Controllers
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetSingleUser(Guid userId)
         {
-            var user = await _usersService.GetSingleUser(userId);
+            var user = await _userService.GetSingleUser(userId);
             return Ok(user);
         }
 
@@ -45,7 +43,7 @@ namespace AppraisalTracker.Modules.Users.Controllers
         [HttpDelete("delete-user/{userId}")]
         public async Task<IActionResult> DeleteUser(Guid userId)
         {
-            var deletedUser = await _usersService.DeleteUser(userId);
+            var deletedUser = await _userService.DeleteUser(userId);
             return Ok(deletedUser);
         }
 
@@ -53,11 +51,7 @@ namespace AppraisalTracker.Modules.Users.Controllers
         [HttpPost("login")]
         public async Task<UserLoginViewModel> AuthenticateUser([FromBody] LoginModel user)
         {
-            Console.WriteLine($"Received Username: {user}");
-
-           var authenticated= await _usersService.AuthenticateUser(user.Username, user.Password);
-
-            // var authenticated = await _usersService.AuthenticateUser(user.Username, user.Password);
+            var authenticated = await _userService.AuthenticateUser(user.Username, user.Password);
             return authenticated;
         }
     }
