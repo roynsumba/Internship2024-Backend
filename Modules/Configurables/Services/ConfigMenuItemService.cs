@@ -19,6 +19,13 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         Task<ConfigMenuItem?> UpdateAnActivityItem(Guid id, ConfigMenuItem activityItem);
         Task<ConfigMenuItem?> DeleteAnActivity(Guid id);
 
+        //Period Methods
+        Task<ConfigMenuItem> AddPeriodItem(ConfigMenuItem periodItem);
+        Task<List<ConfigMenuItem>> GetPeriodItems();
+        Task<ConfigMenuItem?> GetAPeriodItem(Guid id);
+        Task<ConfigMenuItem?> UpdateAPeriodItem(Guid id, ConfigMenuItem periodItem);
+        Task<ConfigMenuItem?> DeleteAPeriod(Guid id);
+
         //SSmartaObjectives Methods
         Task<ConfigMenuItem> AddObjectiveItem(ConfigMenuItem addObjectiveItem);
         Task<List<ConfigMenuItem>> GetAllObjectiveItems();
@@ -179,6 +186,107 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             catch (Exception ex)
             {
                 throw new ClientFriendlyException($"An error occurred while deleting the activity item: {ex.Message}");
+            }
+        }
+
+
+        public async Task<ConfigMenuItem> AddPeriodItem(ConfigMenuItem periodItem)
+        {
+            try
+            {
+                if (_context.ConfigMenuItems.Any(e => e.ItemId == periodItem.ItemId))
+                {
+                    throw new ClientFriendlyException("Period already existing");
+                }
+
+                _context.ConfigMenuItems.Add(periodItem);
+                await _context.SaveChangesAsync();
+
+                return periodItem;
+            }
+            catch (Exception ex)
+            {
+                throw new ClientFriendlyException($"An error occurred while adding the activity item: {ex.Message}");
+            }
+        }
+
+        public async Task<List<ConfigMenuItem>> GetPeriodItems()
+        {
+            try
+            {
+                return await _context.ConfigMenuItems
+                                     .Where(item => item.FieldName == "Period")
+                                     .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ClientFriendlyException($"An error occurred while fetching all period items: {ex.Message}");
+            }
+        }
+
+        public async Task<ConfigMenuItem?> GetAPeriodItem(Guid id)
+        {
+            try
+            {
+                var periodItem = await _context.ConfigMenuItems.FindAsync(id);
+
+                if (periodItem == null)
+                {
+                    throw new ClientFriendlyException($"Couldn't find activity item with id :'{id}'");
+                }
+
+                return periodItem;
+            }
+            catch (Exception ex)
+            {
+                throw new ClientFriendlyException($"An error occurred while fetching the activity item: {ex.Message}");
+            }
+        }
+
+        public async Task<ConfigMenuItem?> UpdateAPeriodItem(Guid id, ConfigMenuItem periodItem)
+        {
+            try
+            {
+                var periodToUpdate = await _context.ConfigMenuItems.FirstOrDefaultAsync(item => item.ItemId == id);
+
+                if (periodToUpdate == null)
+                {
+                    throw new ClientFriendlyException("Could not find record to update.");
+                }
+
+                periodToUpdate.FieldName = periodItem.FieldName;
+                
+
+                _context.ConfigMenuItems.Update(periodToUpdate);
+                await _context.SaveChangesAsync();
+
+                return periodToUpdate;
+            }
+            catch (Exception ex)
+            {
+                throw new ClientFriendlyException($"An error occurred while updating the period item: {ex.Message}");
+            }
+        }
+
+        public async Task<ConfigMenuItem?> DeleteAPeriod(Guid id)
+        {
+            try
+            {
+                var periodToDelete = await _context.ConfigMenuItems.FindAsync(id);
+
+                if (periodToDelete == null)
+                {
+                    throw new ClientFriendlyException("Period record for deletion not found.");
+                }
+
+                _context.ConfigMenuItems.Remove(periodToDelete);
+                await _context.SaveChangesAsync();
+
+                return periodToDelete;
+            }
+            catch (Exception ex)
+            {
+                throw new ClientFriendlyException($"An error occurred while deleting the period item: {ex.Message}");
             }
         }
 

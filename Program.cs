@@ -2,7 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using AppraisalTracker.Modules.AppraisalActivity.Services;
 using AppraisalTracker.Data;
 using Microsoft.OpenApi.Models;
+using AppraisalTracker.Extensions;
 using AppraisalTracker.Modules.Users.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 var assemblies = new[] { typeof(Program).Assembly };
+builder.ConfigureAutoMapper(assemblies);
 builder.Services.AddAutoMapper(assemblies);
 builder.Services.AddScoped<IAppraisalActivityService, AppraisalActivityService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IConfigMenuItemService, ConfigMenuItemService>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

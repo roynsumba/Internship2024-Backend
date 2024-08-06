@@ -22,6 +22,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         public Task<ImplementationViewModel> AddImplementation(ImplementationCreateModel implementation);
 
         public Task<bool> DeleteImplementation(int id);
+        public Task<ImplementationViewModel> FetchEvidence(Guid id);
 
 
 
@@ -123,20 +124,60 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<ImplementationViewModel> AddImplementation(ImplementationCreateModel implementation)
         {
-            var newImplementation = new Implementation
-            {
-                Description = implementation.Description,
-                Comment = implementation.Comment,
-                Stakeholder = implementation.Stakeholder,
-                Evidence = implementation.Evidence,
-                Date = implementation.Date,
-                MeasurableActivityId = implementation.MeasurableActivityId
-            };
 
-            await _context.Implementations.AddAsync(newImplementation);
-            await _context.SaveChangesAsync();
-            var addedImplementation = _mapper.Map<Implementation, ImplementationViewModel>(newImplementation);
-            return addedImplementation;
+            if (implementation.Evidence == null || implementation.Evidence.Length == 0)
+            {
+                throw new Exception("Evidence file is required.");
+            }
+
+            using (var memoryStream = new MemoryStream())
+
+            {
+                await implementation.Evidence.CopyToAsync(memoryStream);
+
+
+                // Check if the file size is within the 10 MB limit (1097152 bytes)
+
+                if (memoryStream.Length < 10097152)
+                {
+
+                    byte[] filevar = memoryStream.ToArray();
+
+
+                    var newImplementation = new Implementation
+                    {
+                        Description = implementation.Description,
+                        Comment = implementation.Comment,
+                        Stakeholder = implementation.Stakeholder,
+                        Evidence = filevar,
+                        EvidenceContentType = implementation.Evidence.ContentType,
+                        EvidenceFileName = implementation.Evidence.FileName,
+                        Date = implementation.Date,
+                        MeasurableActivityId = implementation.MeasurableActivityId
+                    };
+
+
+                    await _context.Implementations.AddAsync(newImplementation);
+                    await _context.SaveChangesAsync();
+
+
+                    var addedImplementation = _mapper.Map<Implementation, ImplementationViewModel>(newImplementation);
+                    return addedImplementation;
+                }
+                else
+                {
+
+                    throw new Exception("File size exceeds the 2 MB limit.");
+                }
+            }
+        }
+
+        public async Task<ImplementationViewModel> FetchEvidence(Guid id)
+        {
+            var uploadedFile = await _context.Implementations.FindAsync(id) ?? throw new ClientFriendlyException("No implementation found");
+            var uploadedFileView = _mapper.Map<Implementation, ImplementationViewModel>(uploadedFile);
+
+            return uploadedFileView;
         }
 
         public async Task<bool> DeleteImplementation(int id)
