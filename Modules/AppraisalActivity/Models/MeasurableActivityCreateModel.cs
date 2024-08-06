@@ -1,15 +1,14 @@
-using System.Text.Json.Serialization;
 
-namespace AppraisalTracker.Modules.AppraisalActivity.Models
+namespace AppraisalTracker.Modules.AppraisalActivity.Models;
+
+public class MeasurableActivityCreateModel
 {
-    public class MeasurableActivityCreateModel
-    {
-        public Guid? PeriodId { get; set; }
-        public Guid? ActivityId { get; set; }
-        public Guid? PerspectiveId { get; set; }
-        public Guid? SsMartaObjectivesId { get; set; }
-        public Guid? InitiativeId { get; set; }
+    public required Guid PeriodId { get; set; }
+    public required Guid ActivityId { get; set; }
+    public required  Guid PerspectiveId { get; set; }
+    public required Guid SsMartaObjectivesId { get; set; }
+    public required  Guid InitiativeId { get; set; }
+    public required Guid UserId { get; set; }
 
-    }
 }
 

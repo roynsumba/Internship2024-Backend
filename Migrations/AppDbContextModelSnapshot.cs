@@ -53,15 +53,21 @@ namespace AppraisalTracker.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Evidence")
+                    b.Property<byte[]>("Evidence")
                         .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("EvidenceContentType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EvidenceFileName")
                         .HasColumnType("text");
 
                     b.Property<Guid>("MeasurableActivityId")
@@ -69,6 +75,9 @@ namespace AppraisalTracker.Migrations
 
                     b.Property<string>("Stakeholder")
                         .HasColumnType("text");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("ImplementationId");
 
@@ -96,6 +105,9 @@ namespace AppraisalTracker.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("SsMartaObjectivesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("MeasurableActivityId");

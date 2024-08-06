@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AppraisalTracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240802080340_AddUserTableWithForeignKeySetInConfigMenuItem")]
-    partial class AddUserTableWithForeignKeySetInConfigMenuItem
+    [Migration("20240806130748_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,8 +44,6 @@ namespace AppraisalTracker.Migrations
 
                     b.HasKey("ItemId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("ConfigMenuItems");
                 });
 
@@ -58,15 +56,21 @@ namespace AppraisalTracker.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Evidence")
+                    b.Property<byte[]>("Evidence")
                         .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("EvidenceContentType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EvidenceFileName")
                         .HasColumnType("text");
 
                     b.Property<Guid>("MeasurableActivityId")
@@ -74,6 +78,9 @@ namespace AppraisalTracker.Migrations
 
                     b.Property<string>("Stakeholder")
                         .HasColumnType("text");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("ImplementationId");
 
@@ -103,6 +110,9 @@ namespace AppraisalTracker.Migrations
                     b.Property<Guid?>("SsMartaObjectivesId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("MeasurableActivityId");
 
                     b.HasIndex("ActivityId");
@@ -118,7 +128,7 @@ namespace AppraisalTracker.Migrations
                     b.ToTable("MeasurableActivities");
                 });
 
-            modelBuilder.Entity("AppraisalTracker.Modules.Users.User", b =>
+            modelBuilder.Entity("AppraisalTracker.Modules.Users.Models.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -147,17 +157,6 @@ namespace AppraisalTracker.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.ConfigMenuItem", b =>
-                {
-                    b.HasOne("AppraisalTracker.Modules.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.Implementation", b =>

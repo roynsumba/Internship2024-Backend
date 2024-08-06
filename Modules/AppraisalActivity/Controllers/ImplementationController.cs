@@ -16,10 +16,10 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // GET: api/Implementations
-        [HttpGet("get-all-implementations")]
-        public async Task<ActionResult<List<Implementation>>> GetImplementations()
+        [HttpGet("get-all-implementations/{userId}")]
+        public async Task<ActionResult<List<ImplementationViewModel>>> GetImplementations([FromRoute] Guid userId)
         {
-            var implementation = await _appraisalActivityService.FetchImplementations();
+            var implementation = await _appraisalActivityService.FetchImplementations(userId);
             return Ok(implementation);
         }
 
@@ -57,7 +57,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             var filedetails = await _appraisalActivityService.FetchEvidence(id);
             if (filedetails.Evidence == null || string.IsNullOrEmpty(filedetails.EvidenceContentType) || string.IsNullOrEmpty(filedetails.EvidenceFileName))
             {
-                return NotFound("Evidence details are incomplete.");
+                return NotFound("Evidence not found");
             }
 
             return File(filedetails.Evidence, filedetails.EvidenceContentType, filedetails.EvidenceFileName);

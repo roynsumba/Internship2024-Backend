@@ -6,11 +6,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppraisalTracker.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserTableWithForeignKeySetInConfigMenuItem : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ConfigMenuItems",
+                columns: table => new
+                {
+                    ItemId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FieldName = table.Column<string>(type: "text", nullable: false),
+                    FieldDescription = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfigMenuItems", x => x.ItemId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -27,26 +41,6 @@ namespace AppraisalTracker.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConfigMenuItems",
-                columns: table => new
-                {
-                    ItemId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FieldName = table.Column<string>(type: "text", nullable: false),
-                    FieldDescription = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConfigMenuItems", x => x.ItemId);
-                    table.ForeignKey(
-                        name: "FK_ConfigMenuItems_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MeasurableActivities",
                 columns: table => new
                 {
@@ -55,7 +49,8 @@ namespace AppraisalTracker.Migrations
                     ActivityId = table.Column<Guid>(type: "uuid", nullable: true),
                     PerspectiveId = table.Column<Guid>(type: "uuid", nullable: true),
                     SsMartaObjectivesId = table.Column<Guid>(type: "uuid", nullable: true),
-                    InitiativeId = table.Column<Guid>(type: "uuid", nullable: true)
+                    InitiativeId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -95,9 +90,12 @@ namespace AppraisalTracker.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: true),
                     Stakeholder = table.Column<string>(type: "text", nullable: true),
-                    Evidence = table.Column<string>(type: "text", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    MeasurableActivityId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Evidence = table.Column<byte[]>(type: "bytea", nullable: false),
+                    EvidenceContentType = table.Column<string>(type: "text", nullable: true),
+                    EvidenceFileName = table.Column<string>(type: "text", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    MeasurableActivityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -109,11 +107,6 @@ namespace AppraisalTracker.Migrations
                         principalColumn: "MeasurableActivityId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ConfigMenuItems_UserId",
-                table: "ConfigMenuItems",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Implementations_MeasurableActivityId",
@@ -153,13 +146,13 @@ namespace AppraisalTracker.Migrations
                 name: "Implementations");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "MeasurableActivities");
 
             migrationBuilder.DropTable(
                 name: "ConfigMenuItems");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }
