@@ -41,8 +41,6 @@ namespace AppraisalTracker.Migrations
 
                     b.HasKey("ItemId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("ConfigMenuItems");
                 });
 
@@ -115,7 +113,7 @@ namespace AppraisalTracker.Migrations
                     b.ToTable("MeasurableActivities");
                 });
 
-            modelBuilder.Entity("AppraisalTracker.Modules.Users.User", b =>
+            modelBuilder.Entity("AppraisalTracker.Modules.Users.Models.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -144,17 +142,6 @@ namespace AppraisalTracker.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.ConfigMenuItem", b =>
-                {
-                    b.HasOne("AppraisalTracker.Modules.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AppraisalTracker.Modules.AppraisalActivity.Models.Implementation", b =>

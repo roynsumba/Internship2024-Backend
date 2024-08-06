@@ -18,9 +18,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // Retrieves all perspectives
         [HttpGet("get-all-perspectives")]
-        public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetPerspectives()
+        public async Task<ActionResult<IEnumerable<ConfigMenuItem>>> GetPerspectives(Guid userId)
         {
-            var perspectives = await _configMenuItemService.FetchPerspectives();
+            var perspectives = await _configMenuItemService.FetchPerspectives(userId);
             return Ok(perspectives);
         }
 

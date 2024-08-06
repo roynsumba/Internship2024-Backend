@@ -8,33 +8,33 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
     public interface IConfigMenuItemService
     {
         //General Configurable Items Methods
-        Task<List<ConfigMenuItem>> FetchConfigMenuItems();
+        Task<List<ConfigMenuItem>> FetchConfigMenuItems(Guid userId);
         Task<ConfigMenuItem> AddConfigMenuItem(ConfigMenuItem configMenuItem);
         public Task<bool> DeleteConfigMenuItem(Guid id);
 
         //Measurable activity Methods
         Task<ConfigMenuItem> AddActivityItem(ConfigMenuItem addActivityItem);
-        Task<List<ConfigMenuItem>> GetAllActivityItems();
+        Task<List<ConfigMenuItem>> GetAllActivityItems(Guid userId);
         Task<ConfigMenuItem?> GetAnActivityItem(Guid id);
         Task<ConfigMenuItem?> UpdateAnActivityItem(Guid id, ConfigMenuItem activityItem);
         Task<ConfigMenuItem?> DeleteAnActivity(Guid id);
 
         //SSmartaObjectives Methods
         Task<ConfigMenuItem> AddObjectiveItem(ConfigMenuItem addObjectiveItem);
-        Task<List<ConfigMenuItem>> GetAllObjectiveItems();
+        Task<List<ConfigMenuItem>> GetAllObjectiveItems(Guid userId);
         Task<ConfigMenuItem?> GetAnObjectiveItem(Guid id);
         Task<ConfigMenuItem?> UpdateObjectiveItem(Guid id, ConfigMenuItem objectiveItem);
         Task<ConfigMenuItem?> DeleteAnObjective(Guid id);
   
         // Perspective-specific methods
-        Task<List<ConfigMenuItem>> FetchPerspectives();
+        Task<List<ConfigMenuItem>> FetchPerspectives(Guid userId);
         Task<ConfigMenuItem> FetchPerspective(Guid id);
         Task<ConfigMenuItem> AddPerspective(ConfigMenuItem perspective);
         Task<ConfigMenuItem> UpdatePerspective(Guid id, ConfigMenuItem perspective);
         Task<bool> DeletePerspective(Guid id);
 
         // Initiative-specific methods
-        Task<List<ConfigMenuItem>> FetchInitiatives();
+        Task<List<ConfigMenuItem>> FetchInitiatives(Guid userId);
         Task<ConfigMenuItem> FetchInitiative(Guid id);
         Task<ConfigMenuItem> AddInitiative(ConfigMenuItem initiative);
         Task<ConfigMenuItem> UpdateInitiative(Guid id, ConfigMenuItem initiative);
@@ -50,11 +50,11 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             _context = context;
         }
 
-        public async Task<List<ConfigMenuItem>> FetchConfigMenuItems()
+        public async Task<List<ConfigMenuItem>> FetchConfigMenuItems(Guid userId)
         {
             try
             {
-                return await _context.ConfigMenuItems.ToListAsync();
+                return await _context.ConfigMenuItems.Where(user => user.UserId == userId).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -102,12 +102,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             }
         }
 
-        public async Task<List<ConfigMenuItem>> GetAllActivityItems()
+        public async Task<List<ConfigMenuItem>> GetAllActivityItems(Guid userId)
         {
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldName == "Measurable Activity")
+                                     .Where(item => item.FieldName == "Measurable Activity" && item.UserId== userId)
                                      .ToListAsync();
             }
             catch (Exception ex)
@@ -202,12 +202,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             }
         }
 
-        public async Task<List<ConfigMenuItem>> GetAllObjectiveItems()
+        public async Task<List<ConfigMenuItem>> GetAllObjectiveItems(Guid userId)
         {
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldName == "Objective")
+                                     .Where(item => item.FieldName == "Objective" && item.UserId == userId)
                                      .ToListAsync();
             }
             catch (Exception ex)
@@ -250,9 +250,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         // Perspective-specific methods
 
-        public async Task<List<ConfigMenuItem>> FetchPerspectives()
+        public async Task<List<ConfigMenuItem>> FetchPerspectives(Guid userId)
         {
-            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Perspective").ToListAsync();
+            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Perspective" && e.UserId == userId).ToListAsync();
         }
 
         public async Task<ConfigMenuItem> FetchPerspective(Guid id)
@@ -295,9 +295,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         // Initiative-specific methods
 
-        public async Task<List<ConfigMenuItem>> FetchInitiatives()
+        public async Task<List<ConfigMenuItem>> FetchInitiatives(Guid userId)
         {
-            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Initiative").ToListAsync();
+            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Initiative" && e.UserId ==userId).ToListAsync();
         }
 
         public async Task<ConfigMenuItem> FetchInitiative(Guid id)
