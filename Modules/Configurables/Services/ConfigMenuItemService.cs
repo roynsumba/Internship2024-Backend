@@ -21,7 +21,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         //Period Methods
         Task<ConfigMenuItem> AddPeriodItem(ConfigMenuItem periodItem);
-        Task<List<ConfigMenuItem>> GetPeriodItems();
+        Task<List<ConfigMenuItem>> GetPeriodItems(Guid userId);
         Task<ConfigMenuItem?> GetAPeriodItem(Guid id);
         Task<ConfigMenuItem?> UpdateAPeriodItem(Guid id, ConfigMenuItem periodItem);
         Task<ConfigMenuItem?> DeleteAPeriod(Guid id);
@@ -210,12 +210,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             }
         }
 
-        public async Task<List<ConfigMenuItem>> GetPeriodItems()
+        public async Task<List<ConfigMenuItem>> GetPeriodItems(Guid userId)
         {
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldName == "Period")
+                                     .Where(item => item.FieldName == "Period" && item.UserId == userId)
                                      .ToListAsync();
             }
             catch (Exception ex)
