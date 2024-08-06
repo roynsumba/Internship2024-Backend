@@ -23,9 +23,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         [HttpGet("all-objective-items")]
-        public async Task<ActionResult<List<ConfigMenuItem>>> GetAllObjectiveItems()
+        public async Task<ActionResult<List<ConfigMenuItem>>> GetAllObjectiveItems(Guid userId)
         {
-            var result = await _configMenuItemService.GetAllObjectiveItems();
+            var result = await _configMenuItemService.GetAllObjectiveItems(userId);
             return Ok(result);
         }
 

@@ -15,11 +15,11 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
             _configMenuItemService = configMenuItemService;
         }
 
-
         [HttpGet("get-all-config-items")]
-        public async Task<ActionResult<ConfigMenuItem>> GetConfigMenuItems()
+        public async Task<ActionResult<ConfigMenuItem>> GetConfigMenuItems(Guid userId)
+
         {
-            var configMenuItems = await _configMenuItemService.FetchConfigMenuItems();
+            var configMenuItems = await _configMenuItemService.FetchConfigMenuItems(userId);
             return Ok(configMenuItems);
         }
 
