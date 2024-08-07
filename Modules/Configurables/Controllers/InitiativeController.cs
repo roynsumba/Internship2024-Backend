@@ -76,7 +76,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
 
         // Deletes an initiative
-        [HttpDelete("delete-an-initiative{id}")]
+        [HttpDelete("delete-an-initiative/{id}")]
         public async Task<ActionResult> DeleteInitiative(Guid id)
         {
             try
