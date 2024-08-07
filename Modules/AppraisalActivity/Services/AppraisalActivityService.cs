@@ -35,7 +35,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<List<MeasurableActivityViewModel>> FetchMeasurableActivities(Guid userId)
         {
-            var measurableActivities = await _context.MeasurableActivities.Where(u => u.UserId == userId).Include(d => d.Implementation).FirstOrDefaultAsync();
+            var measurableActivities = await _context.MeasurableActivities.Where(u => u.UserId == userId).Include(d => d.Implementation).ToListAsync();
             return _mapper.Map<List<MeasurableActivityViewModel>>(measurableActivities);
         }
 
