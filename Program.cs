@@ -31,7 +31,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("staffAppraisalTracker", policyBuilder =>
     {
-        policyBuilder.WithOrigins("http://localhost:3000")
+        policyBuilder.WithOrigins("http://localhost:3000", "http://localhost:3001")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
