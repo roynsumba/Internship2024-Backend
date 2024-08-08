@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AppraisalTracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240806130748_InitialCreate")]
+    [Migration("20240807113540_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -9,6 +9,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
     {
         //General Configurable Items Methods
         Task<List<ConfigMenuItem>> FetchConfigMenuItems(Guid userId);
+        Task<ConfigMenuItem> FetchASingleConfigMenuItem(Guid Id);
         Task<ConfigMenuItem> AddConfigMenuItem(ConfigMenuItem configMenuItem);
         public Task<bool> DeleteConfigMenuItem(Guid id);
 
@@ -492,6 +493,16 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             {
                 throw new ClientFriendlyException($"An error occurred while deleting the objective item: {ex.Message}");
             }
+        }
+
+        public async Task<ConfigMenuItem> FetchASingleConfigMenuItem(Guid Id)
+        {
+                var configItem = await _context.ConfigMenuItems.FindAsync(Id);
+                if(configItem==null){
+                    throw new ClientFriendlyException("Item not found.");
+
+                }
+                return  configItem;
         }
     }
 

@@ -15,7 +15,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         }
 
         // GET: api/MeasurableActivities
-        [HttpGet("get-all-measurable-activities{userId}")]
+        [HttpGet("get-all-measurable-activities/{userId}")]
         public async Task<ActionResult<MeasurableActivityViewModel>> GetMeasurableActivities([FromRoute]  Guid userId)
         {
             var measurableActivities = await _appraisalActivityService.FetchMeasurableActivities(userId);
