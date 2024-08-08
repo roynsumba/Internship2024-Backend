@@ -80,5 +80,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
                 return NotFound(new { message = "Implementation not found" });
             }
         }
+
+        [HttpGet("all-implementations-for-single-activity/{measurableActivityId}")]
+        public async Task<ActionResult<List<Implementation>>> GetImplementationsForASingleActivity([FromRoute] Guid measurableActivityId)
+        {
+            var implementations = await _appraisalActivityService.GetImplementationsForASingleActivity(measurableActivityId);
+            return Ok(implementations);
+        }
     }
 }

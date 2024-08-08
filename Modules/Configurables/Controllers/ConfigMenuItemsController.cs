@@ -30,7 +30,11 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         }
 
+        [HttpGet("get-a-config-item/{Id}")]
+        public async Task<ConfigMenuItem> FetchASingleConfigMenuItem(Guid Id){
+            return await _configMenuItemService.FetchASingleConfigMenuItem(Id);
 
+        }
 
     }
 }
