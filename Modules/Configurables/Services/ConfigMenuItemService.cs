@@ -154,8 +154,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                     throw new ClientFriendlyException("Could not find record to update.");
                 }
 
-                activityToUpdate.FieldName = activityItem.FieldName;
-                activityToUpdate.FieldName = activityItem.FieldName;
+                activityToUpdate.FieldName = "Measurable Activity";
+                activityToUpdate.FieldDescription = activityItem.FieldDescription;
 
                 _context.ConfigMenuItems.Update(activityToUpdate);
                 await _context.SaveChangesAsync();
@@ -255,8 +255,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                     throw new ClientFriendlyException("Could not find record to update.");
                 }
 
-                periodToUpdate.FieldName = periodItem.FieldName;
-                
+                periodToUpdate.FieldName = "Period";
+                periodToUpdate.FieldDescription = periodItem.FieldDescription;
 
                 _context.ConfigMenuItems.Update(periodToUpdate);
                 await _context.SaveChangesAsync();
@@ -384,10 +384,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<ConfigMenuItem> UpdatePerspective(Guid id, ConfigMenuItem perspective)
         {
-            if (id != perspective.ItemId)
-            {
-                throw new ClientFriendlyException("Id mismatch.");
-            }
+            
             var existingItem = await FetchPerspective(id);
             existingItem.FieldDescription = perspective.FieldDescription;
             _context.ConfigMenuItems.Update(existingItem);
@@ -429,10 +426,6 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<ConfigMenuItem> UpdateInitiative(Guid id, ConfigMenuItem initiative)
         {
-            if (id != initiative.ItemId)
-            {
-                throw new ClientFriendlyException("Id mismatch.");
-            }
 
             var existingItem = await FetchInitiative(id);
 
@@ -459,8 +452,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                     throw new ClientFriendlyException("Objective for update not found.");
                 }
 
-                objectiveToUpdate.FieldName = objectiveItem.FieldName;
-                objectiveToUpdate.FieldName = objectiveItem.FieldName;
+                objectiveToUpdate.FieldName = "Objective";
+                objectiveToUpdate.FieldDescription = objectiveItem.FieldDescription;
 
                 _context.ConfigMenuItems.Update(objectiveToUpdate);
                 await _context.SaveChangesAsync();
