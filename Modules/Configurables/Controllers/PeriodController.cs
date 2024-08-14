@@ -24,10 +24,10 @@ namespace AppraisalTracker.Modules.Configurables.Controllers
             return Ok(result);
         }
 
-        [HttpGet("all-period-items/{userId}")]
-        public async Task<ActionResult<List<ConfigMenuItem>>> GetAllPeriodItems([FromRoute] Guid userId)
+        [HttpGet("all-period-items")]
+        public async Task<ActionResult<List<ConfigMenuItem>>> GetAllPeriodItems()
         {
-            var result = await _configMenuItemService.GetPeriodItems(userId);
+            var result = await _configMenuItemService.GetPeriodItems();
             return Ok(result);
         }
 
