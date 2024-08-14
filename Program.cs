@@ -4,6 +4,7 @@ using AppraisalTracker.Data;
 using Microsoft.OpenApi.Models;
 using AppraisalTracker.Extensions;
 using AppraisalTracker.Modules.Users.Services;
+using AppraisalTracker.Modules.Configurables.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
