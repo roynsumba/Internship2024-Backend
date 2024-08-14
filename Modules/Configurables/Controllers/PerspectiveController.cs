@@ -1,9 +1,9 @@
-﻿using AppraisalTracker.Modules.AppraisalActivity.Models;
-using AppraisalTracker.Modules.AppraisalActivity.Services;
-using Microsoft.AspNetCore.Http;
+﻿
+using AppraisalTracker.Modules.Configurables.Models;
+using AppraisalTracker.Modules.Configurables.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
+namespace AppraisalTracker.Modules.Configurables.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -61,7 +61,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         {
             try
             {
-                var updatedPerspective = await _configMenuItemService.UpdatePerspective( id,perspective);
+                var updatedPerspective = await _configMenuItemService.UpdatePerspective(id, perspective);
                 return Ok(updatedPerspective);
             }
             catch (KeyNotFoundException)

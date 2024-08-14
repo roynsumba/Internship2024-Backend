@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AppraisalTracker.Modules.Users;
-
-namespace AppraisalTracker.Modules.AppraisalActivity.Models
+namespace AppraisalTracker.Modules.Configurables.Models
 {
     public class ConfigMenuItem
     {

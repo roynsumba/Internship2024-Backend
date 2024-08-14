@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AppraisalTracker.Modules.AppraisalActivity.Models;
 using AppraisalTracker.Modules.Users.Models;
+using AppraisalTracker.Modules.Configurables.Models;
 
 namespace AppraisalTracker.Data
 {

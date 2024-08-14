@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using AppraisalTracker.Modules.Configurables.Models;
 
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Models

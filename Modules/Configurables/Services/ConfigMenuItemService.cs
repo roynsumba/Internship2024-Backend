@@ -1,9 +1,9 @@
 ﻿using AppraisalTracker.Data;
 using AppraisalTracker.Exceptions;
-using AppraisalTracker.Modules.AppraisalActivity.Models;
+using AppraisalTracker.Modules.Configurables.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AppraisalTracker.Modules.AppraisalActivity.Services
+namespace AppraisalTracker.Modules.Configurables.Services
 {
     public interface IConfigMenuItemService
     {
@@ -33,7 +33,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         Task<ConfigMenuItem?> GetAnObjectiveItem(Guid id);
         Task<ConfigMenuItem?> UpdateObjectiveItem(Guid id, ConfigMenuItem objectiveItem);
         Task<ConfigMenuItem?> DeleteAnObjective(Guid id);
-  
+
         // Perspective-specific methods
         Task<List<ConfigMenuItem>> FetchPerspectives();
         Task<ConfigMenuItem> FetchPerspective(Guid id);
@@ -115,7 +115,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldName == "Measurable Activity" && item.UserId== userId)
+                                     .Where(item => item.FieldName == "Measurable Activity" && item.UserId == userId)
                                      .ToListAsync();
             }
             catch (Exception ex)
@@ -343,8 +343,8 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
                 throw new ClientFriendlyException($"An error occurred while fetching the objective item: {ex.Message}");
             }
         }
-        
-         public async Task<bool> DeleteConfigMenuItem(Guid id)
+
+        public async Task<bool> DeleteConfigMenuItem(Guid id)
         {
             var configMenuItem = await _context.ConfigMenuItems.FindAsync(id);
             if (configMenuItem != null)
@@ -403,7 +403,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<List<ConfigMenuItem>> FetchInitiatives(Guid userId)
         {
-            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Initiative" && e.UserId ==userId).ToListAsync();
+            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Initiative" && e.UserId == userId).ToListAsync();
         }
 
         public async Task<ConfigMenuItem> FetchInitiative(Guid id)
@@ -490,12 +490,13 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         public async Task<ConfigMenuItem> FetchASingleConfigMenuItem(Guid Id)
         {
-                var configItem = await _context.ConfigMenuItems.FindAsync(Id);
-                if(configItem==null){
-                    throw new ClientFriendlyException("Item not found.");
+            var configItem = await _context.ConfigMenuItems.FindAsync(Id);
+            if (configItem == null)
+            {
+                throw new ClientFriendlyException("Item not found.");
 
-                }
-                return  configItem;
+            }
+            return configItem;
         }
     }
 
