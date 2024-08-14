@@ -22,7 +22,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         //Period Methods
         Task<ConfigMenuItem> AddPeriodItem(ConfigMenuItem periodItem);
-        Task<List<ConfigMenuItem>> GetPeriodItems(Guid userId);
+        Task<List<ConfigMenuItem>> GetPeriodItems();
         Task<ConfigMenuItem?> GetAPeriodItem(Guid id);
         Task<ConfigMenuItem?> UpdateAPeriodItem(Guid id, ConfigMenuItem periodItem);
         Task<ConfigMenuItem?> DeleteAPeriod(Guid id);
@@ -35,7 +35,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         Task<ConfigMenuItem?> DeleteAnObjective(Guid id);
   
         // Perspective-specific methods
-        Task<List<ConfigMenuItem>> FetchPerspectives(Guid userId);
+        Task<List<ConfigMenuItem>> FetchPerspectives();
         Task<ConfigMenuItem> FetchPerspective(Guid id);
         Task<ConfigMenuItem> AddPerspective(ConfigMenuItem perspective);
         Task<ConfigMenuItem> UpdatePerspective(Guid id, ConfigMenuItem perspective);
@@ -211,12 +211,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             }
         }
 
-        public async Task<List<ConfigMenuItem>> GetPeriodItems(Guid userId)
+        public async Task<List<ConfigMenuItem>> GetPeriodItems()
         {
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldName == "Period" && item.UserId == userId)
+                                     .Where(item => item.FieldName == "Period")
                                      .ToListAsync();
             }
             catch (Exception ex)
@@ -359,9 +359,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
 
         // Perspective-specific methods
 
-        public async Task<List<ConfigMenuItem>> FetchPerspectives(Guid userId)
+        public async Task<List<ConfigMenuItem>> FetchPerspectives()
         {
-            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Perspective" && e.UserId == userId).ToListAsync();
+            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Perspective").ToListAsync();
         }
 
         public async Task<ConfigMenuItem> FetchPerspective(Guid id)
