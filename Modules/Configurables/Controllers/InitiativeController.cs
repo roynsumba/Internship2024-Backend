@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AppraisalTracker.Modules.Configurables.Models;
+using AppraisalTracker.Modules.Configurables.Services;
 using Microsoft.AspNetCore.Mvc;
-using AppraisalTracker.Modules.AppraisalActivity.Models;
-using AppraisalTracker.Modules.AppraisalActivity.Services;
 
 namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 {
