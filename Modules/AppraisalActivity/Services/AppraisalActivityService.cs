@@ -21,7 +21,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         );
         public Task<bool> DeleteMeasurableActivity(Guid Id);
 
-        public Task<Implementation> UpdateImplementation(Implementation implementation);
+        public Task<ImplementationViewModel> UpdateImplementation(ImplementationCreateModel implementation, Guid id);
 
         public Task<MeasurableActivityViewModel> AddMeasurableActivity(
             MeasurableActivityCreateModel measurableActivity
@@ -91,20 +91,39 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             throw new ClientFriendlyException("No measurable activity found");
         }
 
-        public async Task<Implementation> UpdateImplementation(Implementation implementation)
+        public async Task<ImplementationViewModel> UpdateImplementation(ImplementationCreateModel implementation, Guid id)
         {
-            if (
-                _context.Implementations.Any(e =>
-                    e.ImplementationId == implementation.ImplementationId
-                )
-            )
+            var existingImplementation = await _context.Implementations.FindAsync(id) ?? throw new ClientFriendlyException("Implementation not found.");
+            if (implementation.Evidence == null || implementation.Evidence.Length == 0)
             {
-                _context.Update(implementation);
-
-                await _context.SaveChangesAsync();
-                return implementation;
+                throw new ClientFriendlyException("Evidence file is required.");
             }
-            throw new ClientFriendlyException("No implementation found");
+            using var memoryStream = new MemoryStream();
+            await implementation.Evidence.CopyToAsync(memoryStream);
+            // Check if the file size is within the 2 MB limit (2099990 bytes)
+            if (memoryStream.Length < 2099990)
+            {
+                byte[] filevar = memoryStream.ToArray();
+                existingImplementation.Description = implementation.Description;
+                existingImplementation.Comment = implementation.Comment;
+                existingImplementation.Stakeholder = implementation.Stakeholder;
+                existingImplementation.Evidence = filevar;
+                existingImplementation.EvidenceContentType = implementation.Evidence.ContentType;
+                existingImplementation.EvidenceFileName = implementation.Evidence.FileName;
+                existingImplementation.CreatedDate = implementation.CreatedDate;
+                existingImplementation.MeasurableActivityId = implementation.MeasurableActivityId;
+                existingImplementation.UserId = implementation.UserId;
+                _context.Implementations.Update(existingImplementation);
+                await _context.SaveChangesAsync();
+                var updatedImplementation = _mapper.Map<Implementation, ImplementationViewModel>(
+                    existingImplementation
+                );
+                return updatedImplementation;
+            }
+            else
+            {
+                throw new ClientFriendlyException("File size exceeds the 2 MB limit.");
+            }
         }
 
         public async Task<bool> DeleteMeasurableActivity(Guid Id)

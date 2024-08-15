@@ -34,9 +34,9 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
         // PUT: api/Implementations/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("update-an-implementation")]
-        public async Task<Implementation> UpdateImplementation([FromBody] Implementation implementation)
+        public async Task<ImplementationViewModel> UpdateImplementation([FromForm] ImplementationCreateModel implementation, Guid id)
         {
-            return await _appraisalActivityService.UpdateImplementation(implementation);
+            return await _appraisalActivityService.UpdateImplementation(implementation,id);
 
         }
 

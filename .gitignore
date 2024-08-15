@@ -34,3 +34,5 @@ Logs/*
 # Visual Studio 2015
 .vs/
 .fake
+/Migrations
+/appsettings.json
