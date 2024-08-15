@@ -76,21 +76,10 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // Deletes an initiative
         [HttpDelete("delete-an-initiative/{id}")]
-        public async Task<ActionResult> DeleteInitiative(Guid id)
+        public async Task<ActionResult<ConfigMenuItem>> DeleteInitiative(Guid id)
         {
-            try
-            {
-                var deleted = await _configMenuItemService.DeleteInitiative(id);
-                if (deleted)
-                {
-                    return NoContent();
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _configMenuItemService.DeleteInitiative(id);
+            return Ok(result);
         }
     }
 }

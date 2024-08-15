@@ -68,12 +68,12 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Controllers
 
         // DELETE: api/Implementations/5
         [HttpDelete("delete-an-implementation")]
-        public async Task<ActionResult> DeleteImplementation(Guid Id)
+        public async Task<ActionResult<ImplementationViewModel>> DeleteImplementation(Guid Id)
         {
-            bool result = await _appraisalActivityService.DeleteImplementation(Id);
-            if (result)
+            var result = await _appraisalActivityService.DeleteImplementation(Id);
+            if (result != null)
             {
-                return Ok();
+                return result;
             }
             else
             {

@@ -35,5 +35,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
 
         [ForeignKey("User")]
         public required Guid? UserId { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 }
