@@ -30,7 +30,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             ImplementationCreateModel implementation
         );
 
-        public Task<bool> DeleteImplementation(Guid Id);
+        public Task<ImplementationViewModel> DeleteImplementation(Guid Id);
         public Task<Implementation> FetchEvidence(Guid id);
     }
 
@@ -52,7 +52,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
         public async Task<List<ImplementationViewModel>> FetchImplementations(Guid userId)
         {
             var implementations = await _context
-                .Implementations.Where(u => u.UserId == userId)
+                .Implementations.Where(u => u.UserId == userId && u.IsDeleted == false)
                 .ToListAsync();
             return _mapper.Map<List<ImplementationViewModel>>(implementations);
         }
@@ -216,18 +216,20 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Services
             return uploadedFile;
         }
 
-        public async Task<bool> DeleteImplementation(Guid Id)
+        public async Task<ImplementationViewModel> DeleteImplementation(Guid Id)
         {
             var implementation = await _context.Implementations.FindAsync(Id);
             if (implementation != null)
             {
-                _context.Implementations.Remove(implementation);
+                implementation.IsDeleted = true;
                 await _context.SaveChangesAsync();
-                return true;
+                var deletedImplementation = _mapper.Map<Implementation, ImplementationViewModel>(
+                    implementation);
+                return deletedImplementation;
             }
             else
             {
-                return false;
+                throw new ClientFriendlyException("No implementation found");
             }
         }
 

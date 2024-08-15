@@ -15,5 +15,7 @@ namespace AppraisalTracker.Modules.Configurables.Models
         // Foreign key for User
         [ForeignKey("User")]
         public required Guid UserId { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

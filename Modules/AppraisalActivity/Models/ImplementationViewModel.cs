@@ -10,5 +10,6 @@
         public DateTime CreatedDate { get; set; }
         public Guid MeasurableActivityId { get; set; }
         public Guid UserId { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

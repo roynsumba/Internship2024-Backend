@@ -13,5 +13,7 @@ namespace AppraisalTracker.Modules.AppraisalActivity.Models
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastUpdated { get; set; }
         public Guid UserId { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

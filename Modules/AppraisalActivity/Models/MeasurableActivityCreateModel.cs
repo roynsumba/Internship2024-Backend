@@ -10,5 +10,7 @@ public class MeasurableActivityCreateModel
     public required  Guid InitiativeId { get; set; }
     public required Guid UserId { get; set; }
 
+    public bool IsDeleted { get; set; } = false;
+
 }
 

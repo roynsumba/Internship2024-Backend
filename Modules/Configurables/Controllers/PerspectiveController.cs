@@ -77,21 +77,10 @@ namespace AppraisalTracker.Modules.Configurables.Controllers
 
         // Deletes a perspective
         [HttpDelete("delete-a-perspective/{id}")]
-        public async Task<ActionResult> DeletePerspective(Guid id)
+        public async Task<ActionResult<ConfigMenuItem>> DeletePerspective(Guid id)
         {
-            try
-            {
-                var deleted = await _configMenuItemService.DeletePerspective(id);
-                if (deleted)
-                {
-                    return NoContent();
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _configMenuItemService.DeletePerspective(id);
+            return Ok(result);
         }
     }
 }

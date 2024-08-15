@@ -11,7 +11,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
         Task<List<ConfigMenuItem>> FetchConfigMenuItems(Guid userId);
         Task<ConfigMenuItem> FetchASingleConfigMenuItem(Guid Id);
         Task<ConfigMenuItem> AddConfigMenuItem(ConfigMenuItem configMenuItem);
-        public Task<bool> DeleteConfigMenuItem(Guid id);
+        public Task<ConfigMenuItem> DeleteConfigMenuItem(Guid id);
 
         //Measurable activity Methods
         Task<ConfigMenuItem> AddActivityItem(ConfigMenuItem addActivityItem);
@@ -39,14 +39,14 @@ namespace AppraisalTracker.Modules.Configurables.Services
         Task<ConfigMenuItem> FetchPerspective(Guid id);
         Task<ConfigMenuItem> AddPerspective(ConfigMenuItem perspective);
         Task<ConfigMenuItem> UpdatePerspective(Guid id, ConfigMenuItem perspective);
-        Task<bool> DeletePerspective(Guid id);
+        Task<ConfigMenuItem> DeletePerspective(Guid id);
 
         // Initiative-specific methods
         Task<List<ConfigMenuItem>> FetchInitiatives(Guid userId);
         Task<ConfigMenuItem> FetchInitiative(Guid id);
         Task<ConfigMenuItem> AddInitiative(ConfigMenuItem initiative);
         Task<ConfigMenuItem> UpdateInitiative(Guid id, ConfigMenuItem initiative);
-        Task<bool> DeleteInitiative(Guid id);
+        Task<ConfigMenuItem> DeleteInitiative(Guid id);
     }
 
     public class ConfigMenuItemService : IConfigMenuItemService
@@ -62,7 +62,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
         {
             try
             {
-                return await _context.ConfigMenuItems.Where(user => user.UserId == userId).ToListAsync();
+                return await _context.ConfigMenuItems.Where(user => user.UserId == userId && user.IsDeleted == false).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -115,7 +115,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldName == "Measurable Activity" && item.UserId == userId)
+                                     .Where(item => item.FieldName == "Measurable Activity" && item.UserId == userId && item.IsDeleted == false)
                                      .ToListAsync();
             }
             catch (Exception ex)
@@ -170,24 +170,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
 
         public async Task<ConfigMenuItem?> DeleteAnActivity(Guid id)
         {
-            try
-            {
-                var activityToDelete = await _context.ConfigMenuItems.FindAsync(id);
-
-                if (activityToDelete == null)
-                {
-                    throw new ClientFriendlyException("Activity record for deletion not found.");
-                }
-
-                _context.ConfigMenuItems.Remove(activityToDelete);
-                await _context.SaveChangesAsync();
-
-                return activityToDelete;
-            }
-            catch (Exception ex)
-            {
-                throw new ClientFriendlyException($"An error occurred while deleting the activity item: {ex.Message}");
-            }
+            return await DeleteConfigMenuItem(id);
         }
 
 
@@ -216,7 +199,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldName == "Period")
+                                     .Where(item => item.FieldName == "Period" && item.IsDeleted == false)
                                      .ToListAsync();
             }
             catch (Exception ex)
@@ -271,24 +254,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
 
         public async Task<ConfigMenuItem?> DeleteAPeriod(Guid id)
         {
-            try
-            {
-                var periodToDelete = await _context.ConfigMenuItems.FindAsync(id);
-
-                if (periodToDelete == null)
-                {
-                    throw new ClientFriendlyException("Period record for deletion not found.");
-                }
-
-                _context.ConfigMenuItems.Remove(periodToDelete);
-                await _context.SaveChangesAsync();
-
-                return periodToDelete;
-            }
-            catch (Exception ex)
-            {
-                throw new ClientFriendlyException($"An error occurred while deleting the period item: {ex.Message}");
-            }
+            return await DeleteConfigMenuItem(id);
         }
 
         public async Task<ConfigMenuItem> AddObjectiveItem(ConfigMenuItem addObjectiveItem)
@@ -316,7 +282,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
             try
             {
                 return await _context.ConfigMenuItems
-                                     .Where(item => item.FieldName == "Objective" && item.UserId == userId)
+                                     .Where(item => item.FieldName == "Objective" && item.UserId == userId && item.IsDeleted == false)
                                      .ToListAsync();
             }
             catch (Exception ex)
@@ -344,17 +310,17 @@ namespace AppraisalTracker.Modules.Configurables.Services
             }
         }
 
-        public async Task<bool> DeleteConfigMenuItem(Guid id)
+        public async Task<ConfigMenuItem> DeleteConfigMenuItem(Guid id)
         {
             var configMenuItem = await _context.ConfigMenuItems.FindAsync(id);
             if (configMenuItem != null)
             {
-                _context.ConfigMenuItems.Remove(configMenuItem);
+                configMenuItem.IsDeleted = true;
                 await _context.SaveChangesAsync();
-                return true;
+                return configMenuItem;
             }
 
-            return false;
+            throw new ClientFriendlyException($"Couldn't find objective item with id '{id}'");
         }
 
         // Perspective-specific methods
@@ -366,7 +332,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
 
         public async Task<ConfigMenuItem> FetchPerspective(Guid id)
         {
-            var perspective = await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Perspective");
+            var perspective = await _context.ConfigMenuItems.FirstOrDefaultAsync(e => e.ItemId == id && e.FieldName == "Perspective" && e.IsDeleted == false);
 
             if (perspective == null)
             {
@@ -393,7 +359,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
         }
 
 
-        public async Task<bool> DeletePerspective(Guid id)
+        public async Task<ConfigMenuItem> DeletePerspective(Guid id)
         {
             return await DeleteConfigMenuItem(id);
         }
@@ -403,7 +369,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
 
         public async Task<List<ConfigMenuItem>> FetchInitiatives(Guid userId)
         {
-            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Initiative" && e.UserId == userId).ToListAsync();
+            return await _context.ConfigMenuItems.Where(e => e.FieldName == "Initiative" && e.UserId == userId && e.IsDeleted == false).ToListAsync();
         }
 
         public async Task<ConfigMenuItem> FetchInitiative(Guid id)
@@ -436,7 +402,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
         }
 
 
-        public async Task<bool> DeleteInitiative(Guid id)
+        public async Task<ConfigMenuItem> DeleteInitiative(Guid id)
         {
             return await DeleteConfigMenuItem(id);
         }
@@ -468,24 +434,7 @@ namespace AppraisalTracker.Modules.Configurables.Services
 
         public async Task<ConfigMenuItem?> DeleteAnObjective(Guid id)
         {
-            try
-            {
-                var objectiveToDelete = await _context.ConfigMenuItems.FindAsync(id);
-
-                if (objectiveToDelete == null)
-                {
-                    throw new ClientFriendlyException("Objective for deletion not found.");
-                }
-
-                _context.ConfigMenuItems.Remove(objectiveToDelete);
-                await _context.SaveChangesAsync();
-
-                return objectiveToDelete;
-            }
-            catch (Exception ex)
-            {
-                throw new ClientFriendlyException($"An error occurred while deleting the objective item: {ex.Message}");
-            }
+            return await DeleteConfigMenuItem(id);
         }
 
         public async Task<ConfigMenuItem> FetchASingleConfigMenuItem(Guid Id)
